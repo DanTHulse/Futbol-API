@@ -1,0 +1,7 @@
+﻿CREATE TABLE [football].[Team]
+(
+	[TeamId] INT NOT NULL IDENTITY(1,1),
+	[TeamName] NVARCHAR(MAX) NOT NULL,
+
+	CONSTRAINT [PK_TeamId] PRIMARY KEY ([TeamId])
+)
