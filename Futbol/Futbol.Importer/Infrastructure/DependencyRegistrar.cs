@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Futbol.Importer.Repositories.Interfaces;
+using Futbol.Importer.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,6 +32,8 @@ namespace Futbol.Importer.Infrastructure
             services.AddDbContext<FutbolContext>(options => options.UseSqlServer(settings.ConnectionStrings.FutbolDbConnection));
 
             services.AddSingleton<IApplication, Application>();
+            services.Scan(s => s.FromAssemblyOf<IRepository>().AddClasses(c => c.AssignableTo<IRepository>()).AsImplementedInterfaces().WithTransientLifetime());
+            services.Scan(s => s.FromAssemblyOf<IService>().AddClasses(c => c.AssignableTo<IService>()).AsImplementedInterfaces().WithTransientLifetime());
 
             var serviceProvider = services.BuildServiceProvider();
 

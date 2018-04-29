@@ -69,4 +69,7 @@
     <Build Include="Tables\football\Competition.sql" />
     <Build Include="Tables\football\Season.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Futbol.Database.publish.xml" />
+  </ItemGroup>
 </Project>

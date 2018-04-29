@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Futbol.Importer
+﻿namespace Futbol.Importer
 {
     public class Configuration
     {
@@ -14,7 +8,9 @@ namespace Futbol.Importer
 
         public class AppSettingConfig
         {
+            public string FootballDataApiUrl { get; set; }
 
+            public string FootballDataApiKey { get; set; }
         }
 
         public class ConnectionStringConfig
