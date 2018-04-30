@@ -7,13 +7,10 @@ namespace Futbol.Importer
 {
     public class Application : IApplication
     {
-        private readonly FutbolContext context;
-
         private readonly IFootballDataService footballDataService;
 
-        public Application(FutbolContext context, IFootballDataService footballDataService)
+        public Application(IFootballDataService footballDataService)
         {
-            this.context = context;
             this.footballDataService = footballDataService;
         }
 

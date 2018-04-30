@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Futbol.Common.Infrastructure;
 using Futbol.Importer.Repositories.Interfaces;
 using Futbol.Importer.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;

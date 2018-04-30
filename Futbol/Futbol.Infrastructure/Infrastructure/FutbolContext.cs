@@ -1,7 +1,7 @@
 ﻿using Futbol.Common.Models.Football;
 using Microsoft.EntityFrameworkCore;
 
-namespace Futbol.Importer.Infrastructure
+namespace Futbol.Common.Infrastructure
 {
     public class FutbolContext : DbContext
     {

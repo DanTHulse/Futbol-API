@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Futbol.Common.Infrastructure;
 using Futbol.Common.Models.Football;
 using Futbol.Importer.Helpers;
 using Futbol.Importer.Infrastructure;
