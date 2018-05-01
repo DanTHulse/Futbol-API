@@ -67,7 +67,7 @@ namespace Futbol.API
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Data Retention API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "FUTBOL API V1");
                 c.RoutePrefix = string.Empty;
             });
 
