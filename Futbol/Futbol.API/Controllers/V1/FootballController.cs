@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Futbol.API.DataModels;
 using Futbol.API.Services.Interfaces;
@@ -35,23 +32,11 @@ namespace Futbol.API.Controllers.V1
         [Route("Scores/")]
         [HttpPost]
         [Produces(typeof(IActionResult))]
-        public async Task<IActionResult> SearchScores([FromBody]FootballFilter filter = null, [FromQuery]bool fullData = false)
+        public async Task<IActionResult> SearchScores([FromBody]FootballFilter filter = null, [FromQuery]int page = 1, [FromQuery]int pageSize = 100)
         {
-            if (filter == null && !fullData)
-            {
-                return this.BadRequest($"Making a request with no filters will return a very large amount of data, use a filter. " +
-                                       $"If you absolutely want to return all data set ?fullData=true");
-            }
-            else if (fullData)
-            {
-                var allMatches = await this.footballService.GetAllMatches();
+            var matches = await this.footballService.GetMatches(filter, page, pageSize);
 
-                return this.Ok(allMatches);
-            }
-
-            var matches = await this.footballService.GetMatches(filter);
-
-            return this.Ok(matches.OrderBy(o => o.MatchDate));
+            return this.Ok(matches);
         }
 
         /// <summary>

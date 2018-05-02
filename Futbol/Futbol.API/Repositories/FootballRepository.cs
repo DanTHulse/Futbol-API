@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Futbol.API.DataModels;
 using Futbol.API.Repositories.Interfaces;
@@ -31,8 +29,10 @@ namespace Futbol.API.Repositories
         /// Gets the matches.
         /// </summary>
         /// <param name="filter">The filter.</param>
+        /// <param name="page">The page number</param>
+        /// <param name="pageSize">The page size</param>
         /// <returns>A list of all matches based on the filter</returns>
-        public async Task<IEnumerable<Match>> GetMatches(FootballFilter filter)
+        public async Task<IEnumerable<Match>> GetMatches(FootballFilter filter, int page, int pageSize)
         {
             var matches = await Task.Run(() => this.futbolContext.Match
                 .Include(i => i.MatchData)
@@ -40,9 +40,9 @@ namespace Futbol.API.Repositories
                 .Include(i => i.AwayTeam)
                 .Include(i => i.Competition)
                 .Include(i => i.Season)
-                .Where(w => (!filter.CompetitionIds.Any() || filter.CompetitionIds.Contains(w.CompetitionId))
-                         && (!filter.SeasonIds.Any() || filter.SeasonIds.Contains(w.SeasonId))
-                         && (!filter.TeamIds.Any() || (filter.TeamIds.Contains(w.HomeTeamId) || filter.TeamIds.Contains(w.AwayTeamId)))
+                .Where(w => ((filter.CompetitionIds == null || !filter.CompetitionIds.Any()) || filter.CompetitionIds.Contains(w.CompetitionId))
+                         && ((filter.SeasonIds == null || !filter.SeasonIds.Any()) || filter.SeasonIds.Contains(w.SeasonId))
+                         && ((filter.TeamIds == null || !filter.TeamIds.Any()) || (filter.TeamIds.Contains(w.HomeTeamId) || filter.TeamIds.Contains(w.AwayTeamId)))
                          && (!filter.HomeTeamId.HasValue || w.HomeTeamId == filter.HomeTeamId.Value)
                          && (!filter.AwayTeamId.HasValue || w.AwayTeamId == filter.AwayTeamId.Value)
                          && (!filter.BoxScoreFirst.HasValue
@@ -54,23 +54,8 @@ namespace Futbol.API.Repositories
                                 || (w.MatchData.HTHomeGoals == filter.HalftimeBoxScoreFirst.Value
                                     && w.MatchData.HTAwayGoals == filter.HalftimeBoxScoreSecond.Value)
                                 || (w.MatchData.HTAwayGoals == filter.HalftimeBoxScoreFirst.Value
-                                    && w.MatchData.HTHomeGoals == filter.HalftimeBoxScoreSecond.Value))).ToList());
-
-            return matches;
-        }
-
-        /// <summary>
-        /// Gets all matches.
-        /// </summary>
-        /// <returns>A list of all matches</returns>
-        public async Task<IEnumerable<Match>> GetAllMatches()
-        {
-            var matches = await Task.Run(() => this.futbolContext.Match
-                .Include(i => i.MatchData)
-                .Include(i => i.HomeTeam)
-                .Include(i => i.AwayTeam)
-                .Include(i => i.Competition)
-                .Include(i => i.Season).ToList());
+                                    && w.MatchData.HTHomeGoals == filter.HalftimeBoxScoreSecond.Value)))
+                 .OrderBy(o => o.MatchDate).Skip(pageSize * (page - 1)).Take(pageSize).ToList());
 
             return matches;
         }
@@ -90,6 +75,8 @@ namespace Futbol.API.Repositories
         /// <summary>
         /// Gets the records.
         /// </summary>
+        /// <param name="page">The page number</param>
+        /// <param name="pageSize">The page size</param>
         /// <returns>List of all records</returns>
         public async Task<IEnumerable<T>> Get<T>() where T : class
         {

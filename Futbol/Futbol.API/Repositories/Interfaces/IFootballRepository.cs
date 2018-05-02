@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Futbol.API.DataModels;
 using Futbol.Common.Models.Football;
@@ -14,14 +11,10 @@ namespace Futbol.API.Repositories.Interfaces
         /// Gets the matches.
         /// </summary>
         /// <param name="filter">The filter.</param>
+        /// <param name="page">The page number</param>
+        /// <param name="pageSize">The page size</param>
         /// <returns>A list of all matches based on the filter</returns>
-        Task<IEnumerable<Match>> GetMatches(FootballFilter filter);
-
-        /// <summary>
-        /// Gets all matches.
-        /// </summary>
-        /// <returns>A list of all matches</returns>
-        Task<IEnumerable<Match>> GetAllMatches();
+        Task<IEnumerable<Match>> GetMatches(FootballFilter filter, int page, int pageSize);
 
         /// <summary>
         /// Gets the record by identifier.

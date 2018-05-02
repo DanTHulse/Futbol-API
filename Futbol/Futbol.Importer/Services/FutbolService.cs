@@ -8,13 +8,25 @@ namespace Futbol.Importer.Services
 {
     public class FutbolService : IFutbolService
     {
+        /// <summary>
+        /// The futbol repository
+        /// </summary>
         private readonly IFutbolRepository futbolRepository;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FutbolService"/> class.
+        /// </summary>
+        /// <param name="futbolRepository">The futbol repository.</param>
         public FutbolService(IFutbolRepository futbolRepository)
         {
             this.futbolRepository = futbolRepository;
         }
 
+        /// <summary>
+        /// Retrieves the name of the team by.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
         public Team RetrieveTeamByName(string name)
         {
             var team = this.futbolRepository.RetrieveTeamByName(name);
@@ -30,6 +42,11 @@ namespace Futbol.Importer.Services
             return team;
         }
 
+        /// <summary>
+        /// Retrieves the season by start year.
+        /// </summary>
+        /// <param name="seasonStartYear">The season start year.</param>
+        /// <returns></returns>
         public Season RetrieveSeasonByStartYear(int seasonStartYear)
         {
             var season = this.futbolRepository.RetrieveSeasonByStartYear(seasonStartYear);
@@ -37,6 +54,11 @@ namespace Futbol.Importer.Services
             return season;
         }
 
+        /// <summary>
+        /// Retrieves the name of the competition by.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
         public Competition RetrieveCompetitionByName(string name)
         {
             var competition = this.futbolRepository.RetrieveCompetitionByName(name);
@@ -52,6 +74,10 @@ namespace Futbol.Importer.Services
             return competition;
         }
 
+        /// <summary>
+        /// Inserts the matches.
+        /// </summary>
+        /// <param name="matches">The matches.</param>
         public void InsertMatches(List<Match> matches)
         {
             this.futbolRepository.InsertMatches(matches);

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Futbol.API.DataModels;
 using Futbol.API.Helpers;
@@ -31,23 +29,17 @@ namespace Futbol.API.Services
         /// Gets the matches.
         /// </summary>
         /// <param name="filter">The match filters</param>
+        /// <param name="page">The page number</param>
+        /// <param name="pageSize">The page size</param>
         /// <returns>A list of matches based on the filters</returns>
-        public async Task<IEnumerable<FootballMatch>> GetMatches(FootballFilter filter)
+        public async Task<PageHeader<FootballMatch>> GetMatches(FootballFilter filter, int page, int pageSize)
         {
-            var matches = await this.footballRepository.GetMatches(filter);
+            var matchData = await this.footballRepository.GetMatches(filter, page, pageSize);
+            var mappedMatches = this.MapData(matchData);
 
-            return this.MapData(matches);
-        }
+            var result = mappedMatches.BuildPageHeader(page, pageSize);
 
-        /// <summary>
-        /// Gets all matches.
-        /// </summary>
-        /// <returns>A list of all matches</returns>
-        public async Task<IEnumerable<FootballMatch>> GetAllMatches()
-        {
-            var matches = await this.footballRepository.GetAllMatches();
-
-            return this.MapData(matches);
+            return result;
         }
 
         /// <summary>

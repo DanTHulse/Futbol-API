@@ -8,14 +8,31 @@ namespace Futbol.Importer.Repositories
 {
     public class FootballDataRepository : IFootballDataRepository
     {
+        /// <summary>
+        /// The configuration
+        /// </summary>
         private readonly Configuration config;
 
+        /// <summary>
+        /// The rest sharp service
+        /// </summary>
         private readonly IRestSharpService restSharpService;
 
+        /// <summary>
+        /// The football data API URL
+        /// </summary>
         private readonly string footballDataApiUrl;
 
+        /// <summary>
+        /// The football data API key
+        /// </summary>
         private readonly string footballDataApiKey;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FootballDataRepository"/> class.
+        /// </summary>
+        /// <param name="config">The configuration.</param>
+        /// <param name="restSharpService">The rest sharp service.</param>
         public FootballDataRepository(Configuration config, IRestSharpService restSharpService)
         {
             this.config = config;
@@ -25,6 +42,11 @@ namespace Futbol.Importer.Repositories
             this.footballDataApiKey = this.config.AppSettings.FootballDataApiKey;
         }
 
+        /// <summary>
+        /// Retrives the competitions by season.
+        /// </summary>
+        /// <param name="seasonStartYear">The season start year.</param>
+        /// <returns></returns>
         public List<Competitions> RetriveCompetitionsBySeason(int seasonStartYear)
         {
             this.restSharpService.Url = $"{this.footballDataApiUrl}/competitions/";
@@ -37,6 +59,11 @@ namespace Futbol.Importer.Repositories
             return result.Data;
         }
 
+        /// <summary>
+        /// Retrieves the fixtures for competition.
+        /// </summary>
+        /// <param name="competitionId">The competition identifier.</param>
+        /// <returns></returns>
         public FixturesHeader RetrieveFixturesForCompetition(int competitionId)
         {
             this.restSharpService.Url = $"{this.footballDataApiUrl}/competitions/{competitionId}/fixtures/";

@@ -16,6 +16,8 @@ namespace Futbol.Common.Models.Football
 
         public int AwayTeamId { get; set; }
 
+        public string MatchUid { get; set; }
+
         public MatchData MatchData { get; set; }
 
         public Competition Competition { get; set; }
