@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Futbol.API.DataModels;
 using Futbol.API.Services.Interfaces;
@@ -31,7 +32,7 @@ namespace Futbol.API.Controllers.V1
         /// <returns>A list of matches based on the provided filters</returns>
         [Route("Scores/")]
         [HttpPost]
-        [Produces(typeof(IActionResult))]
+        [Produces(typeof(PageHeader<FootballMatch>))]
         public async Task<IActionResult> SearchScores([FromBody]FootballFilter filter = null, [FromQuery]int page = 1, [FromQuery]int pageSize = 100)
         {
             var matches = await this.footballService.GetMatches(filter, page, pageSize);
@@ -45,7 +46,7 @@ namespace Futbol.API.Controllers.V1
         /// <returns>Gets all competitions</returns>
         [Route("Competitions/")]
         [HttpGet]
-        [Produces(typeof(IActionResult))]
+        [Produces(typeof(IEnumerable<FootballCompetition>))]
         public async Task<IActionResult> GetCompetitions()
         {
             var competitions = await this.footballService.GetCompetitions();
@@ -60,7 +61,7 @@ namespace Futbol.API.Controllers.V1
         /// <returns>Get specific competition</returns>
         [Route("Competitions/{competitionId:int}")]
         [HttpGet]
-        [Produces(typeof(IActionResult))]
+        [Produces(typeof(FootballCompetition))]
         public async Task<IActionResult> GetCompetitionById([FromRoute]int competitionId)
         {
             var competition = await this.footballService.GetCompetitionById(competitionId);
@@ -79,7 +80,7 @@ namespace Futbol.API.Controllers.V1
         /// <returns>Gets all seasons</returns>
         [Route("Seasons/")]
         [HttpGet]
-        [Produces(typeof(IActionResult))]
+        [Produces(typeof(IEnumerable<FootballSeason>))]
         public async Task<IActionResult> GetSeasons()
         {
             var seasons = await this.footballService.GetSeasons();
@@ -94,7 +95,7 @@ namespace Futbol.API.Controllers.V1
         /// <returns>Get specific season</returns>
         [Route("Seasons/{seasonId:int}")]
         [HttpGet]
-        [Produces(typeof(IActionResult))]
+        [Produces(typeof(FootballSeason))]
         public async Task<IActionResult> GetSeasonById([FromRoute]int seasonId)
         {
             var season = await this.footballService.GetSeasonById(seasonId);
@@ -113,7 +114,7 @@ namespace Futbol.API.Controllers.V1
         /// <returns>Gets all teams</returns>
         [Route("Teams/")]
         [HttpGet]
-        [Produces(typeof(IActionResult))]
+        [Produces(typeof(IEnumerable<FootballTeam>))]
         public async Task<IActionResult> GetTeams()
         {
             var teams = await this.footballService.GetTeams();
@@ -128,7 +129,7 @@ namespace Futbol.API.Controllers.V1
         /// <returns>Gets specific team</returns>
         [Route("Teams/{teamId:int}")]
         [HttpGet]
-        [Produces(typeof(IActionResult))]
+        [Produces(typeof(FootballTeam))]
         public async Task<IActionResult> GetTeamById([FromRoute]int teamId)
         {
             var team = await this.footballService.GetTeamById(teamId);
