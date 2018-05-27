@@ -57,5 +57,30 @@ namespace Futbol.Importer.Helpers
             Console.ForegroundColor = ConsoleColor.Red;
             Console.Write($" - {status}");
         }
+
+        /// <summary>
+        /// Logs the options
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public static void Options<T>() where T : struct, IConvertible
+        {
+            Type genericType = typeof(T);
+
+            if (genericType.IsEnum)
+            {
+                foreach (T obj in Enum.GetValues(genericType))
+                {
+                    Enum enumType = Enum.Parse(typeof(T), obj.ToString()) as Enum;
+                    int x = Convert.ToInt32(enumType); // x is the integer value of enum
+                    var value = enumType.ToString();
+
+                    Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write($"{x} - ");
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.Write($"{value}");
+                }
+            }
+        }
     }
 }

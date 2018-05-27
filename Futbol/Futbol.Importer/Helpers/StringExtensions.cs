@@ -2,7 +2,7 @@
 
 namespace Futbol.Importer.Helpers
 {
-    public static class StringExtenstions
+    public static class StringEx
     {
         /// <summary>
         /// Left function on string.
