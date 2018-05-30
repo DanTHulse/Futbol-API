@@ -57,7 +57,10 @@ namespace Futbol.Importer.Services
 
                         ConsoleLog.Information($"Fixtures retrieved for {competition.Caption}", $"{competition.Fixtures.Count()}");
 
-                        this.MapRecords(competition, seasonStartYear);
+                        if (competition.Fixtures != null && competition.Fixtures.Any())
+                        {
+                            this.MapRecords(competition, seasonStartYear);
+                        }
                     }
                     else
                     {

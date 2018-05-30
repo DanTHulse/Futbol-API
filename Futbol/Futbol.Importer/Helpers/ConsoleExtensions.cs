@@ -41,6 +41,8 @@ namespace Futbol.Importer.Helpers
 
             Console.WriteLine();
 
+            numValue = Int32.TryParse(value, out int newNumValue) == true ? newNumValue : 0;
+
             return numValue;
         }
     }

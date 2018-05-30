@@ -41,7 +41,9 @@ namespace Futbol.Importer.Repositories
         /// <returns>Season by year</returns>
         public Season RetrieveSeasonByStartYear(int seasonStartYear)
         {
-            return this.context.Season.FirstOrDefault(w => w.SeasonPeriod.StartsWith(seasonStartYear.ToString()));
+            var seasonCode = (seasonStartYear % 100).ToString().PadLeft(2, '0');
+
+            return this.context.Season.FirstOrDefault(w => w.SeasonPeriod.StartsWith(seasonCode));
         }
 
         /// <summary>
