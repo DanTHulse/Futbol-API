@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using CsvHelper;
 using Futbol.Importer.DataModels.FootballBetData;
@@ -28,7 +29,7 @@ namespace Futbol.Importer.Repositories
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
         /// <returns>Parsed football data from CSV</returns>
-        public object ParseFootballBetData(string fileName, string competitionName)
+        public List<Fixture> ParseFootballBetData(string fileName)
         {
             using (TextReader csvText = File.OpenText(fileName))
             {
@@ -37,11 +38,12 @@ namespace Futbol.Importer.Repositories
                 csv.Configuration.Delimiter = ",";
                 csv.Configuration.HeaderValidated = null;
                 csv.Configuration.MissingFieldFound = null;
+                csv.Configuration.IgnoreBlankLines = true;
 
                 var records = csv.GetRecords<Fixture>().ToList();
+
+                return records.Where(w => !string.IsNullOrEmpty(w.Division)).ToList();
             }
-               
-            return null;
         }
     }
 }

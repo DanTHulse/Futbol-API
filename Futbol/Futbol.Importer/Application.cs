@@ -84,7 +84,7 @@ namespace Futbol.Importer
 
             ConsoleLog.Header($"Import complete, do you want to continue? [Y/n]");
 
-            if (Console.Read() == 'n')
+            if (Console.ReadLine() == "n")
             {
                 return 1;
             }
@@ -94,53 +94,62 @@ namespace Futbol.Importer
 
         private int FootballBetDataImport()
         {
-            ConsoleLog.Header($"Football Bet Data CSV Importer");
-            Console.WriteLine();
-            Console.WriteLine("Please select a folder below");
+            var exit = 0;
 
-            DirectoryInfo[] subFolders = new DirectoryInfo($"{PROJECTDATA_DIRECTORY}\\Futbol\\FootballBetData").GetDirectories("*.*", SearchOption.AllDirectories);
-
-            for (int i = 0; i < subFolders.ToList().Count; i++)
+            do
             {
+                ConsoleLog.Header($"Football Bet Data CSV Importer");
                 Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write($"{i} - ");
-                Console.ForegroundColor = ConsoleColor.Gray;
-                Console.Write($"{subFolders[i].Name}");
-            }
+                Console.WriteLine("Please select a folder below");
 
-            Console.WriteLine();
-            Console.WriteLine();
-            var selection = ConsoleEx.ReadNumber();
+                DirectoryInfo[] subFolders = new DirectoryInfo($"{PROJECTDATA_DIRECTORY}\\Futbol\\FootballBetData").GetDirectories("*.*", SearchOption.AllDirectories);
 
-            Console.Clear();
-            ConsoleLog.Header($"Football Bet Data CSV Importer");
-            Console.WriteLine();
-            Console.WriteLine("Please select a file below");
+                for (int i = 0; i < subFolders.ToList().Count; i++)
+                {
+                    Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write($"{i} - ");
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.Write($"{subFolders[i].Name}");
+                }
 
-            FileInfo[] files = new DirectoryInfo(subFolders[selection].FullName).GetFiles();
-
-            for (int i = 0; i < files.ToList().Count; i++)
-            {
                 Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write($"{i} - ");
-                Console.ForegroundColor = ConsoleColor.Gray;
-                Console.Write($"{files[i].Name}");
-            }
+                Console.WriteLine();
+                var selection = ConsoleEx.ReadNumber();
 
-            Console.WriteLine();
-            Console.WriteLine();
-            var fileSelection = ConsoleEx.ReadNumber();
+                Console.Clear();
+                ConsoleLog.Header($"Football Bet Data CSV Importer: {subFolders[selection].Name}");
+                Console.WriteLine();
+                Console.WriteLine("Please select a file below");
 
-            this.footballBetDataService.ImportBetData(files[fileSelection].FullName, subFolders[selection].Name);
+                FileInfo[] files = new DirectoryInfo(subFolders[selection].FullName).GetFiles();
 
-            ConsoleLog.Header($"Import complete, do you want to continue? [Y/n]");
+                for (int i = 0; i < files.ToList().Count; i++)
+                {
+                    Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write($"{i} - ");
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.Write($"{files[i].Name}");
+                }
 
-            if (Console.Read() == 'n')
-            {
-                return 1;
-            }
+                Console.WriteLine();
+                Console.WriteLine();
+                var fileSelection = ConsoleEx.ReadNumber();
+
+                var seasonStart = Int32.Parse(files[fileSelection].Name.Replace(files[fileSelection].Extension, "").Split(" ").Last());
+
+                this.footballBetDataService.ImportBetData(files[fileSelection].FullName, subFolders[selection].Name, seasonStart);
+
+                ConsoleLog.Header($"Import complete, do you want to continue? [Y/n]");
+                Console.WriteLine();
+
+                if (Console.ReadLine() == "n")
+                {
+                    return 1;
+                }
+
+            } while (exit == 0);
 
             return 0;
         }

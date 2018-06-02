@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Futbol.Common.Models.Football;
 using Futbol.Importer.Helpers;
 using Futbol.Importer.Repositories.Interfaces;
@@ -33,10 +34,29 @@ namespace Futbol.Importer.Services
 
             if (team == null)
             {
-                ConsoleLog.Information($"New Team added to database", $"{name}");
+                ConsoleLog.Information($"Team not found:", $"{name}");
+                Console.WriteLine();
+                Console.WriteLine($"Is this an alternate spelling? [Y/n]");
 
-                this.futbolRepository.Add(new Team { TeamName = name });
-                team = this.futbolRepository.RetrieveTeamByName(name);
+                var answer = Console.ReadLine();
+
+                if (answer == "n")
+                {
+                    ConsoleLog.Information($"New Team added to database", $"{name}");
+                    Console.WriteLine();
+
+                    this.futbolRepository.Add(new Team { TeamName = name });
+                    team = this.futbolRepository.RetrieveTeamByName(name);
+                }
+                else
+                {
+                    Console.WriteLine($"Enter Id for team");
+                    var teamId = ConsoleEx.ReadNumber();
+                    team = this.futbolRepository.RetrieveTeamById(teamId);
+
+                    team.AlternateTeamName = name;
+                    this.futbolRepository.UpdateTeam(team);
+                }
             }
 
             return team;

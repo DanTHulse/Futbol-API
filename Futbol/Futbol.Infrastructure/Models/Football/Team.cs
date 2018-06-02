@@ -14,6 +14,8 @@ namespace Futbol.Common.Models.Football
 
         public string TeamName { get; set; }
 
+        public string AlternateTeamName { get; set; }
+
         public ICollection<Match> HomeMatches { get; set; }
 
         public ICollection<Match> AwayMatches { get; set; }

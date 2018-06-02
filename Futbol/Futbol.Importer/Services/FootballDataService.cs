@@ -136,8 +136,8 @@ namespace Futbol.Importer.Services
         /// <returns></returns>
         private string BuildMatchUid(string homeTeam, string awayTeam, DateTime matchDate)
         {
-            var homeTeamTag = homeTeam.Replace(" ", "").Left(3).ToUpper();
-            var awayTeamTag = awayTeam.Replace(" ", "").Left(3).ToUpper();
+            var homeTeamTag = homeTeam.Replace(" ", "").Replace(".", "").Left(5).ToUpper();
+            var awayTeamTag = awayTeam.Replace(" ", "").Replace(".", "").Left(5).ToUpper();
 
             return $"{homeTeamTag}{awayTeamTag}{matchDate.ToString("yyyyMMdd")}";
         }

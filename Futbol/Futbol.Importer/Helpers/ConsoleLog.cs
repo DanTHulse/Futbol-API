@@ -42,6 +42,7 @@ namespace Futbol.Importer.Helpers
             Console.Write(text);
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write($" - {status}");
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
         /// <summary>

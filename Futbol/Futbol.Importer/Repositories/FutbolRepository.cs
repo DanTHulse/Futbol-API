@@ -31,7 +31,24 @@ namespace Futbol.Importer.Repositories
         /// <returns>Team by name</returns>
         public Team RetrieveTeamByName(string name)
         {
-            return this.context.Team.FirstOrDefault(w => w.TeamName == name);
+            return this.context.Team.FirstOrDefault(w => w.TeamName == name || w.AlternateTeamName == name);
+        }
+
+        /// <summary>
+        /// Retrieves the team by identifier.
+        /// </summary>
+        /// <param name="teamId">The team identifier.</param>
+        /// <returns></returns>
+        public Team RetrieveTeamById(int teamId)
+        {
+            return this.context.Team.FirstOrDefault(w => w.TeamId == teamId);
+        }
+
+
+        public void UpdateTeam(Team team)
+        {
+            this.context.Team.Update(team);
+            this.context.SaveChanges();
         }
 
         /// <summary>
@@ -88,6 +105,8 @@ namespace Futbol.Importer.Repositories
 
                         this.context.MatchData.Add(matchData);
                         this.context.SaveChanges();
+
+                        ConsoleLog.Information($"Inserted Match:", $"{record.HomeTeamId} V {record.AwayTeamId}");
                     }
                 }
                 catch (Exception ex)

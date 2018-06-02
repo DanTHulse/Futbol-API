@@ -1,4 +1,7 @@
-﻿namespace Futbol.Importer.Repositories.Interfaces
+﻿using System.Collections.Generic;
+using Futbol.Importer.DataModels.FootballBetData;
+
+namespace Futbol.Importer.Repositories.Interfaces
 {
     public interface IFootballBetDataRepository : IRepository
     {
@@ -7,6 +10,6 @@
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
         /// <returns>Parsed football data from CSV</returns>
-        object ParseFootballBetData(string fileName, string competitionName);
+        List<Fixture> ParseFootballBetData(string fileName);
     }
 }

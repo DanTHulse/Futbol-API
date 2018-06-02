@@ -13,6 +13,15 @@ namespace Futbol.Importer.Repositories.Interfaces
         Team RetrieveTeamByName(string name);
 
         /// <summary>
+        /// Retrieves the team by identifier.
+        /// </summary>
+        /// <param name="teamId">The team identifier.</param>
+        /// <returns></returns>
+        Team RetrieveTeamById(int teamId);
+
+        void UpdateTeam(Team team);
+
+        /// <summary>
         /// Retrieves the season by start year.
         /// </summary>
         /// <param name="seasonStartYear">The season start year.</param>

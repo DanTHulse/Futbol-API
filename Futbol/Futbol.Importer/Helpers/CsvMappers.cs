@@ -7,13 +7,14 @@ namespace Futbol.Importer.Helpers
     {
         public FootballBetMap()
         {
-            Map(m => m.Division).Name("Div");
+            Map(m => m.Division).Name("Div", "League");
+            Map(m => m.Season).Name("Season");
             Map(m => m.MatchDate).Name("Date");
-            Map(m => m.HomeTeam).Name("HomeTeam");
-            Map(m => m.AwayTeam).Name("AwayTeam");
-            Map(m => m.FullTimeHomeGoals).Name("FTHG");
-            Map(m => m.FullTimeAwayGoals).Name("FTAG");
-            Map(m => m.FullTimeResult).Name("FTR");
+            Map(m => m.HomeTeam).Name("HomeTeam", "Home");
+            Map(m => m.AwayTeam).Name("AwayTeam", "Away");
+            Map(m => m.FullTimeHomeGoals).Name("FTHG", "HG");
+            Map(m => m.FullTimeAwayGoals).Name("FTAG", "AG");
+            Map(m => m.FullTimeResult).Name("FTR", "Res");
             Map(m => m.HalfTimeHomeGoals).Name("HTHG");
             Map(m => m.HalfTimeAwayGoals).Name("HTAG");
             Map(m => m.HalfTimeResult).Name("HTR");

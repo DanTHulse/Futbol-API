@@ -1,4 +1,10 @@
-﻿using Futbol.Importer.Repositories.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Futbol.Common.Models.Football;
+using Futbol.Importer.DataModels.FootballBetData;
+using Futbol.Importer.Helpers;
+using Futbol.Importer.Repositories.Interfaces;
 using Futbol.Importer.Services.Interfaces;
 
 namespace Futbol.Importer.Services
@@ -11,26 +17,121 @@ namespace Futbol.Importer.Services
         private readonly IFootballBetDataRepository footballBetDataRepository;
 
         /// <summary>
+        /// The futbol service
+        /// </summary>
+        private readonly IFutbolService futbolService;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="FootballBetDataService"/> class.
         /// </summary>
         /// <param name="footballDataRepository">The football data repository.</param>
-        public FootballBetDataService(IFootballBetDataRepository footballBetDataRepository)
+        public FootballBetDataService(IFootballBetDataRepository footballBetDataRepository, IFutbolService futbolService)
         {
             this.footballBetDataRepository = footballBetDataRepository;
+            this.futbolService = futbolService;
         }
 
         /// <summary>
         /// Imports the bet data.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
-        public void ImportBetData(string fileName, string competitionName)
+        /// <param name="competitionName">The name of the competition being imported</param>
+        /// <param name="seasonStart">The start year of the season period</param>
+        public void ImportBetData(string fileName, string competitionName, int seasonStart)
         {
-            var matches = this.footballBetDataRepository.ParseFootballBetData(fileName, competitionName);
+            ConsoleLog.Start($"Parsing fixtures: {competitionName} - {seasonStart}");
+
+            var fixtures = this.footballBetDataRepository.ParseFootballBetData(fileName);
+
+            if (fixtures != null && fixtures.Any())
+            {
+                ConsoleLog.Information("Fixtures found:", $"{fixtures.Count()}");
+
+                fixtures.Select(s => { s.Division = competitionName; s.Season = seasonStart; return s; });
+
+                this.MapRecords(fixtures, competitionName, seasonStart);
+            }
+            else
+            {
+                ConsoleLog.Error($"No fixtures found for file: {fileName}", $"{competitionName} - {seasonStart}");
+            }
         }
 
-        private void MapRecords(object matchData)
+        /// <summary>
+        /// Maps the records.
+        /// </summary>
+        /// <param name="fixtures">The fixtures.</param>
+        /// <param name="competitionName">Name of the competition.</param>
+        /// <param name="seasonStart">The season start.</param>
+        private void MapRecords(List<Fixture> fixtures, string competitionName, int seasonStart)
         {
+            var seasonId = this.futbolService.RetrieveSeasonByStartYear(seasonStart).SeasonId;
+            var competitionId = this.futbolService.RetrieveCompetitionByName(competitionName).CompetitionId;
 
+            var allTeams = fixtures.Select(s => s.HomeTeam).ToList();
+            allTeams.AddRange(fixtures.Select(a => a.AwayTeam).ToList());
+
+            var distinctTeams = allTeams.Distinct();
+
+            var teamRecords = distinctTeams.Select(s => this.futbolService.RetrieveTeamByName(s)).ToList();
+
+            var matches = fixtures.Select(s => new Match
+            {
+                HomeTeamId = teamRecords.FirstOrDefault(f => f.TeamName == s.HomeTeam || f.AlternateTeamName == s.HomeTeam).TeamId,
+                AwayTeamId = teamRecords.FirstOrDefault(f => f.TeamName == s.AwayTeam || f.AlternateTeamName == s.AwayTeam).TeamId,
+                MatchDate = s.MatchDate.Value,
+                SeasonId = seasonId,
+                CompetitionId = competitionId,
+                MatchUid = this.BuildMatchUid(s.HomeTeam, s.AwayTeam, s.MatchDate.Value),
+                MatchData = new MatchData
+                {
+                    FTHomeGoals = s.FullTimeHomeGoals,
+                    FTAwayGoals = s.FullTimeAwayGoals,
+                    FTResult = this.CalculateResult(s.FullTimeHomeGoals, s.FullTimeAwayGoals),
+                    HTHomeGoals = s.HalfTimeHomeGoals,
+                    HTAwayGoals = s.HalfTimeAwayGoals,
+                    HTResult = this.CalculateResult(s.HalfTimeHomeGoals, s.HalfTimeAwayGoals),
+                    HomeShots = s.HomeShots,
+                    AwayShots = s.AwayShots,
+                    HomeShotsOnTarget = s.HomeShotsOnTarget,
+                    AwayShotsOnTarget = s.AwayShotsOnTarget
+                }
+            }).ToList();
+
+            this.futbolService.InsertMatches(matches);
+        }
+
+        /// <summary>
+        /// Calculates the result.
+        /// </summary>
+        /// <param name="homeGoals">The home goals.</param>
+        /// <param name="awayGoals">The away goals.</param>
+        /// <returns></returns>
+        private string CalculateResult(int? homeGoals, int? awayGoals)
+        {
+            if (homeGoals == null)
+                return "U";
+            else if (homeGoals > awayGoals)
+                return "H";
+            else if (homeGoals < awayGoals)
+                return "A";
+            else
+                return "D";
+        }
+
+        /// <summary>
+        /// Builds the match uid.
+        /// </summary>
+        /// <param name="homeTeam">The home team.</param>
+        /// <param name="awayTeam">The away team.</param>
+        /// <param name="matchDate">The match date.</param>
+        /// <returns></returns>
+        private string BuildMatchUid(string homeTeam, string awayTeam, DateTime matchDate)
+        {
+            var homeTeamTag = homeTeam.Replace(" ", "").Replace(".", "").Left(5).ToUpper();
+            var awayTeamTag = awayTeam.Replace(" ", "").Replace(".", "").Left(5).ToUpper();
+
+            return $"{homeTeamTag}{awayTeamTag}{matchDate.ToString("yyyyMMdd")}";
         }
     }
 }
