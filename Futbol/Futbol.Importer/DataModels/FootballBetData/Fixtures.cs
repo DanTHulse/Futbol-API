@@ -14,9 +14,9 @@ namespace Futbol.Importer.DataModels.FootballBetData
 
         public string AwayTeam { get; set; }
 
-        public int FullTimeHomeGoals { get; set; }
+        public int? FullTimeHomeGoals { get; set; }
 
-        public int FullTimeAwayGoals { get; set; }
+        public int? FullTimeAwayGoals { get; set; }
 
         public string FullTimeResult { get; set; }
 

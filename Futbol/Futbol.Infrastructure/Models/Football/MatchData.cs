@@ -6,9 +6,9 @@
 
         public int MatchId { get; set; }
 
-        public int FTHomeGoals { get; set; }
+        public int? FTHomeGoals { get; set; }
 
-        public int FTAwayGoals { get; set; }
+        public int? FTAwayGoals { get; set; }
 
         public string FTResult { get; set; }
 

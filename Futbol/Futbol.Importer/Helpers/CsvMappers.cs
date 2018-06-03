@@ -10,8 +10,8 @@ namespace Futbol.Importer.Helpers
             Map(m => m.Division).Name("Div", "League");
             Map(m => m.Season).Name("Season");
             Map(m => m.MatchDate).Name("Date");
-            Map(m => m.HomeTeam).Name("HomeTeam", "Home");
-            Map(m => m.AwayTeam).Name("AwayTeam", "Away");
+            Map(m => m.HomeTeam).Name("HomeTeam", "Home", "HT");
+            Map(m => m.AwayTeam).Name("AwayTeam", "Away", "AT");
             Map(m => m.FullTimeHomeGoals).Name("FTHG", "HG");
             Map(m => m.FullTimeAwayGoals).Name("FTAG", "AG");
             Map(m => m.FullTimeResult).Name("FTR", "Res");
