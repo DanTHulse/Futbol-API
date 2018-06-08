@@ -6,7 +6,7 @@ namespace Futbol.Importer.DataModels.FootballBetData
     {
         public string Division { get; set; }
 
-        public int Season { get; set; }
+        public string Season { get; set; }
 
         public DateTime? MatchDate { get; set; }
 

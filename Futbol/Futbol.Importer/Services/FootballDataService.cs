@@ -77,7 +77,9 @@ namespace Futbol.Importer.Services
         /// <param name="seasonStartYear">The season start year.</param>
         private void MapRecords(Competitions competition, int seasonStartYear)
         {
-            var seasonId = this.futbolService.RetrieveSeasonByStartYear(seasonStartYear).SeasonId;
+            var seasonCode = (seasonStartYear % 100).ToString().PadLeft(2, '0');
+
+            var seasonId = this.futbolService.RetrieveSeasonByStartYear(Int32.Parse(seasonCode)).SeasonId;
             var competitionId = this.futbolService.RetrieveCompetitionByName(competition.Caption).CompetitionId;
 
             var allTeams = competition.Fixtures.Select(s => s.HomeTeamName).ToList();

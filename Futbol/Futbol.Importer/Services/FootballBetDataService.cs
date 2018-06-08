@@ -47,7 +47,7 @@ namespace Futbol.Importer.Services
             {
                 ConsoleLog.Information("Fixtures found:", $"{fixtures.Count()}");
 
-                fixtures.Select(s => { s.Division = competitionName; s.Season = seasonStart; return s; });
+                fixtures.Select(s => { s.Division = competitionName; s.Season = seasonStart.ToString(); return s; });
 
                 this.MapRecords(fixtures, competitionName, seasonStart);
             }
