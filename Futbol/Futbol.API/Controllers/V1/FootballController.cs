@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Futbol.API.Controllers.V1
 {
-    [Route("api/v1")]
+    [Route("api/v1/Football")]
     public class FootballController : Controller
     {
         /// <summary>
@@ -30,7 +30,7 @@ namespace Futbol.API.Controllers.V1
         /// <param name="filter">The match filters</param>
         /// <param name="fullData">if set to <c>true</c> [full data].</param>
         /// <returns>A list of matches based on the provided filters</returns>
-        [Route("Scores/")]
+        [Route("Matches/")]
         [HttpPost]
         [Produces(typeof(PageHeader<FootballMatch>))]
         public async Task<IActionResult> SearchScores([FromBody]FootballFilter filter = null, [FromQuery]int page = 1, [FromQuery]int pageSize = 100)

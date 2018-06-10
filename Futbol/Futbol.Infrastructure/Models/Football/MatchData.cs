@@ -26,6 +26,14 @@
 
         public int? AwayShotsOnTarget { get; set; }
 
+        public int? FTGoals_1 => this.FTHomeGoals >= this.FTAwayGoals ? this.FTHomeGoals : this.FTAwayGoals;
+
+        public int? FTGoals_2 => this.FTHomeGoals >= this.FTAwayGoals ? this.FTAwayGoals : this.FTHomeGoals;
+
+        public int? HTGoals_1 => this.HTHomeGoals >= this.HTAwayGoals ? this.HTHomeGoals : this.HTAwayGoals;
+
+        public int? HTGoals_2 => this.HTHomeGoals >= this.HTAwayGoals ? this.HTAwayGoals : this.HTHomeGoals;
+
         public Match Match { get; set; }
     }
 }
