@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Futbol.API.Middleware;
 using Futbol.API.Repositories.Interfaces;
 using Futbol.API.Services.Interfaces;
 using Futbol.Common.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +15,7 @@ namespace Futbol.API
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
+        public IConfigurationRoot Configuration { get; }
 
         public Startup(IHostingEnvironment env)
         {
@@ -49,6 +45,7 @@ namespace Futbol.API
             services.Scan(s => s.FromAssemblyOf<IService>().AddClasses(c => c.AssignableTo<IService>()).AsImplementedInterfaces().WithTransientLifetime());
 
             services.AddDbContext<FutbolContext>(options => options.UseSqlServer(this.Configuration["ConnectionString:FutbolDbConnection"]));
+            services.AddSingleton<IConfigurationRoot>(this.Configuration);
         }
 
         /// <summary>

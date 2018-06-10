@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace Futbol.API.DataModels.Stats
 {
@@ -13,6 +14,9 @@ namespace Futbol.API.DataModels.Stats
         public DateTime MatchDate { get; set; }
 
         public string CompetitionSeason { get; set; }
+
+        [JsonIgnore]
+        public int MatchId { get; set; }
 
         public Uri MatchData { get; set; }
     }

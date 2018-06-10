@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Futbol.API.DataModels;
-using Futbol.API.Helpers;
 using Futbol.API.Repositories.Interfaces;
 using Futbol.API.Services.Interfaces;
 using Futbol.Common.Models.Football;
@@ -32,14 +31,31 @@ namespace Futbol.API.Services
         /// <param name="page">The page number</param>
         /// <param name="pageSize">The page size</param>
         /// <returns>A list of matches based on the filters</returns>
-        public async Task<PageHeader<FootballMatch>> GetMatches(FootballFilter filter, int page, int pageSize)
+        public async Task<IEnumerable<FootballMatch>> GetMatches(FootballFilter filter, int page, int pageSize)
         {
             var matchData = await this.footballRepository.GetMatches(filter, page, pageSize);
             var mappedMatches = this.MapData(matchData);
 
-            var result = mappedMatches.BuildPageHeader(page, pageSize);
+            //var result = mappedMatches.BuildPageHeader(page, pageSize);
 
-            return result;
+            return mappedMatches;
+        }
+
+        /// <summary>
+        /// Gets the match by identifier.
+        /// </summary>
+        /// <param name="matchId">The match identifier.</param>
+        /// <returns></returns>
+        public async Task<IEnumerable<FootballMatch>> GetMatchById(int matchId)
+        {
+            var match = await this.footballRepository.GetMatchById(matchId);
+
+            if (match == null || match.MatchId == 0)
+            {
+                return null;
+            }
+
+            return this.MapData(new List<Match> { match });
         }
 
         /// <summary>

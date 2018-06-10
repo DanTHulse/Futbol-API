@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Futbol.API.DataModels
+﻿namespace Futbol.API.DataModels
 {
     public class FootballFilter
     {
-        public int[] CompetitionIds { get; set; }
+        public int? CompetitionId { get; set; }
 
-        public int[] SeasonIds { get; set; }
+        public int? SeasonId { get; set; }
 
-        public int[] TeamIds { get; set; }
+        public int? TeamId { get; set; }
+
+        public int? TeamId_2 { get; set; }
 
         public int? HomeTeamId { get; set; }
 
@@ -25,5 +21,7 @@ namespace Futbol.API.DataModels
         public int? HalftimeBoxScoreFirst { get; set; }
 
         public int? HalftimeBoxScoreSecond { get; set; }
+
+        public int? MatchId { get; set; }
     }
 }

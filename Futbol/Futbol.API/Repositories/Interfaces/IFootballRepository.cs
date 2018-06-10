@@ -17,6 +17,13 @@ namespace Futbol.API.Repositories.Interfaces
         Task<IEnumerable<Match>> GetMatches(FootballFilter filter, int page, int pageSize);
 
         /// <summary>
+        /// Gets the match by identifier.
+        /// </summary>
+        /// <param name="Id">The identifier.</param>
+        /// <returns></returns>
+        Task<Match> GetMatchById(int Id);
+
+        /// <summary>
         /// Gets the record by identifier.
         /// </summary>
         /// <param name="Id">The identifier.</param>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Futbol.API.DataModels.Stats
 {
@@ -36,6 +37,12 @@ namespace Futbol.API.DataModels.Stats
 
         public int Count { get; set; }
 
+        [JsonIgnore]
+        public int Goals_1 { get; set; }
+
+        [JsonIgnore]
+        public int Goals_2 { get; set; }
+
         public Uri AllMatches { get; set; }
     }
 
@@ -46,6 +53,12 @@ namespace Futbol.API.DataModels.Stats
         public int Count { get; set; }
 
         public Uri AllMatches { get; set; }
+
+        [JsonIgnore]
+        public int Team_1 { get; set; }
+
+        [JsonIgnore]
+        public int Team_2 { get; set; }
     }
 
     public class StatsTeamMatchups_Grouping

@@ -11,7 +11,7 @@ namespace Futbol.API.DataModels.Stats
 
         public StatsResults FirstResult { get; set; }
 
-        public IEnumerable<StatsResults> LastFiveResults { get; set; }
+        public IEnumerable<StatsResults> LastResults { get; set; }
 
         public StatsRecords HomeTeamRecord { get; set; }
 

@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Futbol.API.DataModels.Enumerations;
 using Futbol.API.DataModels.Stats;
 using Futbol.API.Helpers;
 using Futbol.API.Repositories.Interfaces;
 using Futbol.API.Services.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace Futbol.API.Services
 {
@@ -11,9 +13,16 @@ namespace Futbol.API.Services
     {
         private readonly IFutbolRepository futbolRepository;
 
-        public StatsService(IFutbolRepository futbolRepository)
+        private readonly string FBUrl;
+
+        private readonly string StatsUrl;
+
+        public StatsService(IFutbolRepository futbolRepository, IConfigurationRoot configuration)
         {
             this.futbolRepository = futbolRepository;
+            this.FBUrl = configuration.GetValue<string>("AppSettings:FootballApiUrl");
+            this.StatsUrl = configuration.GetValue<string>("AppSettings:StatsApiUrl");
+
         }
 
         /// <summary>
@@ -43,8 +52,11 @@ namespace Futbol.API.Services
                 FirstMatch = firstMatch.BuildResults(),
                 LastMatch = lastMatch.BuildResults(),
                 Count = matches.Count(),
-                //AllMatches = new Uri($"")
+                AllMatches = new Uri($"{this.FBUrl}?boxScoreFirst={firstBoxScore}&boxScoreSecond={secondBoxScore}&competitionId={competitionId}&seasonId={seasonId}")
             };
+
+            scoreStats.FirstMatch.MatchData = new Uri($"{this.FBUrl}?matchId={scoreStats.FirstMatch.MatchId}");
+            scoreStats.LastMatch.MatchData = new Uri($"{this.FBUrl}?matchId={scoreStats.LastMatch.MatchId}");
 
             return scoreStats;
         }
@@ -101,6 +113,23 @@ namespace Futbol.API.Services
                 MostDrawsAgainst = draws.all.CalculateMostPlayed(team.TeamId)
             };
 
+            teamStats.BiggestWin.AllMatches = new Uri($"{this.FBUrl}?boxScoreFirst={teamStats.BiggestWin.Goals_1}&boxScoreSecond={teamStats.BiggestWin.Goals_2}&teamId={teamId}&competitionId={competitionId}&seasonId={seasonId}");
+            teamStats.BiggestWin.FirstMatch.MatchData = new Uri($"{this.FBUrl}?matchId={teamStats.BiggestWin.FirstMatch.MatchId}");
+            teamStats.BiggestWin.LastMatch.MatchData = new Uri($"{this.FBUrl}?matchId={teamStats.BiggestWin.LastMatch.MatchId}");
+
+            teamStats.BiggestLoss.AllMatches = new Uri($"{this.FBUrl}?boxScoreFirst={teamStats.BiggestLoss.Goals_1}&boxScoreSecond={teamStats.BiggestLoss.Goals_2}&teamId={teamId}&competitionId={competitionId}&seasonId={seasonId}");
+            teamStats.BiggestLoss.FirstMatch.MatchData = new Uri($"{this.FBUrl}?matchId={teamStats.BiggestLoss.FirstMatch.MatchId}");
+            teamStats.BiggestLoss.LastMatch.MatchData = new Uri($"{this.FBUrl}?matchId={teamStats.BiggestLoss.LastMatch.MatchId}");
+
+            teamStats.BiggestDraw.AllMatches = new Uri($"{this.FBUrl}?boxScoreFirst={teamStats.BiggestDraw.Goals_1}&boxScoreSecond={teamStats.BiggestDraw.Goals_2}&teamId={teamId}&competitionId={competitionId}&seasonId={seasonId}");
+            teamStats.BiggestDraw.FirstMatch.MatchData = new Uri($"{this.FBUrl}?matchId={teamStats.BiggestDraw.FirstMatch.MatchId}");
+            teamStats.BiggestDraw.LastMatch.MatchData = new Uri($"{this.FBUrl}?matchId={teamStats.BiggestDraw.LastMatch.MatchId}");
+
+            teamStats.MostGamesPlayedAgainst.Select(s => { s.AllMatches = new Uri($"{this.FBUrl}?teamId={s.Team_1}&teamId_2={s.Team_2}&competitionId={competitionId}&seasonId={seasonId}"); return s; }).ToList();
+            teamStats.MostWinsAgainst.Select(s => { s.AllMatches = new Uri($"{this.FBUrl}?teamId={s.Team_1}&teamId_2={s.Team_2}&competitionId={competitionId}&seasonId={seasonId}"); return s; }).ToList();
+            teamStats.MostLossesAgainst.Select(s => { s.AllMatches = new Uri($"{this.FBUrl}?teamId={s.Team_1}&teamId_2={s.Team_2}&competitionId={competitionId}&seasonId={seasonId}"); return s; }).ToList();
+            teamStats.MostDrawsAgainst.Select(s => { s.AllMatches = new Uri($"{this.FBUrl}?teamId={s.Team_1}&teamId_2={s.Team_2}&competitionId={competitionId}&seasonId={seasonId}"); return s; }).ToList();
+
             return teamStats;
         }
 
@@ -128,16 +157,19 @@ namespace Futbol.API.Services
                 HomeTeam = firstMatch.HomeTeam.TeamName,
                 AwayTeam = firstMatch.AwayTeam.TeamName,
                 FirstResult = firstMatch.BuildResults(),
-                LastFiveResults = matches.TakeLast(5).Select(s => s.BuildResults()),
+                LastResults = matches.TakeLast(5).Select(s => s.BuildResults()).ToList(),
                 HomeTeamRecord = new StatsRecords
                 {
                     GamesWon = matches.Where(w => w.MatchData.FTResult == "H").Count(),
                     GamesLost = matches.Where(w => w.MatchData.FTResult == "A").Count(),
                     GamesDrawn = matches.Where(w => w.MatchData.FTResult == "D").Count()
                 },
-                //ReverseFixture = new Uri($""),
-                //FixtureMatches = new Uri($"")
+                ReverseFixture = new Uri($"{this.StatsUrl}/{firstMatch.AwayTeamId}/{firstMatch.HomeTeamId}?competitionId={competitionId}&seasonId={seasonId}"),
+                FixtureMatches = new Uri($"{this.FBUrl}?homeTeamId={homeTeam}&awayTeamId={awayTeam}&competitionId={competitionId}&seasonId={seasonId}")
             };
+
+            fixtureStats.FirstResult.MatchData = new Uri($"{this.FBUrl}?matchId={fixtureStats.FirstResult.MatchId}");
+            fixtureStats.LastResults.Select(s => { s.MatchData = new Uri($"{this.FBUrl}?matchId={s.MatchId}"); return s; }).ToList();
 
             return fixtureStats;
         }

@@ -31,10 +31,15 @@ namespace Futbol.API.Controllers.V1
         /// <param name="fullData">if set to <c>true</c> [full data].</param>
         /// <returns>A list of matches based on the provided filters</returns>
         [Route("Matches/")]
-        [HttpPost]
-        [Produces(typeof(PageHeader<FootballMatch>))]
-        public async Task<IActionResult> SearchScores([FromBody]FootballFilter filter = null, [FromQuery]int page = 1, [FromQuery]int pageSize = 100)
+        [HttpGet]
+        [Produces(typeof(IEnumerable<FootballMatch>))]
+        public async Task<IActionResult> SearchScores([FromQuery]FootballFilter filter = null, [FromQuery]int page = 1, [FromQuery]int pageSize = 100)
         {
+            if (filter != null && filter.MatchId.HasValue)
+            {
+                return this.Ok(await this.footballService.GetMatchById(filter.MatchId.Value));
+            }
+
             var matches = await this.footballService.GetMatches(filter, page, pageSize);
 
             return this.Ok(matches);

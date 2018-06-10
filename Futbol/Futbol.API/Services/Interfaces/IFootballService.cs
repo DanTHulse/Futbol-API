@@ -13,7 +13,14 @@ namespace Futbol.API.Services.Interfaces
         /// <param name="page">The page number</param>
         /// <param name="pageSize">The page size</param>
         /// <returns>A list of all matches based on the filters</returns>
-        Task<PageHeader<FootballMatch>> GetMatches(FootballFilter filter, int page, int pageSize);
+        Task<IEnumerable<FootballMatch>> GetMatches(FootballFilter filter, int page, int pageSize);
+
+        /// <summary>
+        /// Gets the match by identifier.
+        /// </summary>
+        /// <param name="matchId">The match identifier.</param>
+        /// <returns></returns>
+        Task<IEnumerable<FootballMatch>> GetMatchById(int matchId);
 
         /// <summary>
         /// Gets the competition by identifier.

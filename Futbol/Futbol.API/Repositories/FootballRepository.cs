@@ -40,9 +40,10 @@ namespace Futbol.API.Repositories
                 .Include(i => i.AwayTeam)
                 .Include(i => i.Competition)
                 .Include(i => i.Season)
-                .Where(w => ((filter.CompetitionIds == null || !filter.CompetitionIds.Any()) || filter.CompetitionIds.Contains(w.CompetitionId))
-                         && ((filter.SeasonIds == null || !filter.SeasonIds.Any()) || filter.SeasonIds.Contains(w.SeasonId))
-                         && ((filter.TeamIds == null || !filter.TeamIds.Any()) || (filter.TeamIds.Contains(w.HomeTeamId) || filter.TeamIds.Contains(w.AwayTeamId)))
+                .Where(w => (!filter.CompetitionId.HasValue || filter.CompetitionId.Value == w.CompetitionId)
+                         && (!filter.SeasonId.HasValue || filter.SeasonId.Value == w.SeasonId)
+                         && (!filter.TeamId.HasValue || ((filter.TeamId == w.HomeTeamId && (!filter.TeamId_2.HasValue || filter.TeamId_2 == w.AwayTeamId))
+                                                     || (filter.TeamId == w.AwayTeamId && (!filter.TeamId_2.HasValue || filter.TeamId_2 == w.HomeTeamId))))
                          && (!filter.HomeTeamId.HasValue || w.HomeTeamId == filter.HomeTeamId.Value)
                          && (!filter.AwayTeamId.HasValue || w.AwayTeamId == filter.AwayTeamId.Value)
                          && (!filter.BoxScoreFirst.HasValue
@@ -55,9 +56,25 @@ namespace Futbol.API.Repositories
                                     && w.MatchData.HTAwayGoals == filter.HalftimeBoxScoreSecond.Value)
                                 || (w.MatchData.HTAwayGoals == filter.HalftimeBoxScoreFirst.Value
                                     && w.MatchData.HTHomeGoals == filter.HalftimeBoxScoreSecond.Value)))
-                 .OrderBy(o => o.MatchDate).Skip(pageSize * (page - 1)).Take(pageSize).ToList());
+                 .OrderBy(o => o.MatchDate).ToList());
 
             return matches;
+        }
+
+        /// <summary>
+        /// Gets the match by identifier.
+        /// </summary>
+        /// <param name="Id">The identifier.</param>
+        /// <returns></returns>
+        public async Task<Match> GetMatchById(int Id)
+        {
+            return await Task.Run(() => this.futbolContext.Match
+                .Include(i => i.MatchData)
+                .Include(i => i.HomeTeam)
+                .Include(i => i.AwayTeam)
+                .Include(i => i.Competition)
+                .Include(i => i.Season)
+                .Where(w => w.MatchId == Id).FirstOrDefault());
         }
 
         /// <summary>

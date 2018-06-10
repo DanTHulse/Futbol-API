@@ -17,7 +17,7 @@ namespace Futbol.API.Helpers
                 AwayTeam = $"{match.AwayTeam.TeamName}",
                 MatchDate = match.MatchDate,
                 CompetitionSeason = $"{match.Competition.CompetitionName} {match.Season.SeasonPeriod}",
-                //MatchData = new Uri($"")
+                MatchId = match.MatchId,
             };
         }
 
@@ -60,7 +60,8 @@ namespace Futbol.API.Helpers
                 FirstMatch = filteredMatches.First().BuildResults(),
                 LastMatch = filteredMatches.Last().BuildResults(),
                 Count = filteredMatches.Count(),
-                //AllMatches = new Uri($"")
+                Goals_1 = filteredMatches.First().MatchData.FTGoals_1.Value,
+                Goals_2 = filteredMatches.First().MatchData.FTGoals_2.Value,
             };
         }
 
@@ -99,6 +100,8 @@ namespace Futbol.API.Helpers
                 {
                     TeamName = $"{secondTeam.SecondTeam}",
                     Count = group.Count,
+                    Team_1 = teamId,
+                    Team_2 = secondTeam.SecondTeamId
                     //AllMatches = new Uri($"")
                 };
 
