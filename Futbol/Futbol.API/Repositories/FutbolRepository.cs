@@ -7,6 +7,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Futbol.API.Repositories
 {
+    /// <summary>
+    /// The repository for data from the FUTBOL database
+    /// </summary>
+    /// <seealso cref="Futbol.API.Repositories.Interfaces.IFutbolRepository" />
     public class FutbolRepository : IFutbolRepository
     {
         /// <summary>
@@ -103,6 +107,23 @@ namespace Futbol.API.Repositories
                 .Where(w => !seasonId.HasValue || w.SeasonId == seasonId.Value);
 
             return matches.OrderBy(o => o.MatchDate).ToList();
+        }
+
+        /// <summary>
+        /// Retrieves the match scores.
+        /// </summary>
+        /// <param name="competitionId">The competition identifier.</param>
+        /// <param name="seasonId">The season identifier.</param>
+        /// <param name="fullTime">if set to <c>true</c> [full time].</param>
+        /// <returns></returns>
+        public IEnumerable<MatchData> RetrieveMatchData(int? competitionId, int? seasonId, bool fullTime)
+        {
+            var matchData = this.futbolContext.MatchData
+                .Include(i => i.Match)
+                .Where(w => !competitionId.HasValue || w.Match.CompetitionId == competitionId.Value)
+                .Where(w => !seasonId.HasValue || w.Match.SeasonId == seasonId.Value);
+
+            return matchData;
         }
     }
 }

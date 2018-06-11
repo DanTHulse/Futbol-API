@@ -34,5 +34,14 @@ namespace Futbol.API.Repositories.Interfaces
         /// <param name="seasonId">The season identifier.</param>
         /// <returns></returns>
         IEnumerable<Match> RetrieveMatchesByFixture(int homeTeam, int awayTeam, int? competitionId, int? seasonId);
+
+        /// <summary>
+        /// Retrieves the match scores.
+        /// </summary>
+        /// <param name="competitionId">The competition identifier.</param>
+        /// <param name="seasonId">The season identifier.</param>
+        /// <param name="fullTime">if set to <c>true</c> [full time].</param>
+        /// <returns></returns>
+        IEnumerable<MatchData> RetrieveMatchData(int? competitionId, int? seasonId, bool fullTime);
     }
 }

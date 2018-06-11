@@ -89,7 +89,21 @@ namespace Futbol.API.Services
         /// <returns></returns>
         public IEnumerable<StatsScores> RetrieveAllScoreStats(int? competitionId, int? seasonId, bool fullTime)
         {
-            return null;
+            var matchData = this.futbolRepository.RetrieveMatchData(competitionId, seasonId, fullTime);
+
+            var groupedMatchScores = matchData
+                .GroupBy(g => new { g.FTGoals_1, g.FTGoals_2 })
+                .Select(grp => new { Item = grp.Key, Count = grp.Count() })
+                .OrderBy(o => o.Item.FTGoals_1).ThenBy(o => o.Item.FTGoals_2);
+
+            var stats = groupedMatchScores.Select(s => new StatsScores
+            {
+                BoxScore = $"{s.Item.FTGoals_1}-{s.Item.FTGoals_2}",
+                Count = s.Count,
+                AllMatches = new Uri($"{this.FBUrl}?boxScoreFirst={s.Item.FTGoals_1}&boxScoreSecond={s.Item.FTGoals_2}&competitionId={competitionId}&seasonId={seasonId}")
+            }).ToList();
+
+            return stats;
         }
 
         /// <summary>

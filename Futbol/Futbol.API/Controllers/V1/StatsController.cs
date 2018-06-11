@@ -39,7 +39,7 @@ namespace Futbol.API.Controllers.V1
         {
             var stats = await Task.Run(() => this.statsService.RetrieveAllScoreStats(competitionId, seasonId, fullTime));
 
-            return this.Ok();
+            return this.Ok(stats);
         }
 
         /// <summary>
