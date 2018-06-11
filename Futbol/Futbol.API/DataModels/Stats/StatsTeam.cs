@@ -8,17 +8,17 @@ namespace Futbol.API.DataModels.Stats
     {
         public string TeamName { get; set; }
         
-        public StatsTeamScores BiggestWin { get; set; }
+        public StatsScores BiggestWin { get; set; }
 
-        public StatsTeamScores BiggestLoss { get; set; }
+        public StatsScores BiggestLoss { get; set; }
 
-        public StatsTeamScores BiggestDraw { get; set; }
+        public StatsScores BiggestDraw { get; set; }
 
-        public StatsRecords Record { get; set; }
+        public StatsRecord Record { get; set; }
 
-        public StatsRecords HomeRecord { get; set; }
+        public StatsRecord HomeRecord { get; set; }
 
-        public StatsRecords AwayRecord { get; set; }
+        public StatsRecord AwayRecord { get; set; }
 
         public IEnumerable<StatsTeamMatchups> MostGamesPlayedAgainst { get; set; }
 
@@ -27,23 +27,6 @@ namespace Futbol.API.DataModels.Stats
         public IEnumerable<StatsTeamMatchups> MostLossesAgainst { get; set; }
 
         public IEnumerable<StatsTeamMatchups> MostDrawsAgainst { get; set; }
-    }
-
-    public class StatsTeamScores
-    {
-        public StatsResults FirstMatch { get; set; }
-
-        public StatsResults LastMatch { get; set; }
-
-        public int Count { get; set; }
-
-        [JsonIgnore]
-        public int Goals_1 { get; set; }
-
-        [JsonIgnore]
-        public int Goals_2 { get; set; }
-
-        public Uri AllMatches { get; set; }
     }
 
     public class StatsTeamMatchups

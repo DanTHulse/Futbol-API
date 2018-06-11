@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Futbol.API.DataModels.Enumerations;
 using Futbol.API.DataModels.Stats;
@@ -9,14 +10,32 @@ using Microsoft.Extensions.Configuration;
 
 namespace Futbol.API.Services
 {
+    /// <summary>
+    /// The stats service
+    /// </summary>
+    /// <seealso cref="Futbol.API.Services.Interfaces.IStatsService" />
     public class StatsService : IStatsService
     {
+        /// <summary>
+        /// The futbol repository
+        /// </summary>
         private readonly IFutbolRepository futbolRepository;
 
+        /// <summary>
+        /// The fb URL
+        /// </summary>
         private readonly string FBUrl;
 
+        /// <summary>
+        /// The stats URL
+        /// </summary>
         private readonly string StatsUrl;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StatsService"/> class.
+        /// </summary>
+        /// <param name="futbolRepository">The futbol repository.</param>
+        /// <param name="configuration">The configuration.</param>
         public StatsService(IFutbolRepository futbolRepository, IConfigurationRoot configuration)
         {
             this.futbolRepository = futbolRepository;
@@ -62,6 +81,18 @@ namespace Futbol.API.Services
         }
 
         /// <summary>
+        /// Retrieves all score stats.
+        /// </summary>
+        /// <param name="competitionId">The competition identifier.</param>
+        /// <param name="seasonId">The season identifier.</param>
+        /// <param name="fullTime">if set to <c>true</c> [full time].</param>
+        /// <returns></returns>
+        public IEnumerable<StatsScores> RetrieveAllScoreStats(int? competitionId, int? seasonId, bool fullTime)
+        {
+            return null;
+        }
+
+        /// <summary>
         /// Retrieves the team stats.
         /// </summary>
         /// <param name="teamId">The team identifier.</param>
@@ -89,19 +120,19 @@ namespace Futbol.API.Services
                 BiggestWin = wins.all.CalculateBiggestResult(),
                 BiggestLoss = losses.all.CalculateBiggestResult(),
                 BiggestDraw = draws.all.CalculateBiggestResult(),
-                Record = new StatsRecords
+                Record = new StatsRecord
                 {
                     GamesWon = wins.all.Count(),
                     GamesLost = losses.all.Count(),
                     GamesDrawn = draws.all.Count()
                 },
-                HomeRecord = new StatsRecords
+                HomeRecord = new StatsRecord
                 {
                     GamesWon = wins.home.Count(),
                     GamesLost = losses.home.Count(),
                     GamesDrawn = draws.home.Count()
                 },
-                AwayRecord = new StatsRecords
+                AwayRecord = new StatsRecord
                 {
                     GamesWon = wins.away.Count(),
                     GamesLost = losses.away.Count(),
@@ -158,14 +189,14 @@ namespace Futbol.API.Services
                 AwayTeam = firstMatch.AwayTeam.TeamName,
                 FirstResult = firstMatch.BuildResults(),
                 LastResults = matches.TakeLast(5).Select(s => s.BuildResults()).ToList(),
-                HomeTeamRecord = new StatsRecords
+                HomeTeamRecord = new StatsRecord
                 {
                     GamesWon = matches.Where(w => w.MatchData.FTResult == "H").Count(),
                     GamesLost = matches.Where(w => w.MatchData.FTResult == "A").Count(),
                     GamesDrawn = matches.Where(w => w.MatchData.FTResult == "D").Count()
                 },
                 ReverseFixture = new Uri($"{this.StatsUrl}/{firstMatch.AwayTeamId}/{firstMatch.HomeTeamId}?competitionId={competitionId}&seasonId={seasonId}"),
-                FixtureMatches = new Uri($"{this.FBUrl}?homeTeamId={homeTeam}&awayTeamId={awayTeam}&competitionId={competitionId}&seasonId={seasonId}")
+                AllMatches = new Uri($"{this.FBUrl}?homeTeamId={homeTeam}&awayTeamId={awayTeam}&competitionId={competitionId}&seasonId={seasonId}")
             };
 
             fixtureStats.FirstResult.MatchData = new Uri($"{this.FBUrl}?matchId={fixtureStats.FirstResult.MatchId}");

@@ -23,6 +23,26 @@ namespace Futbol.API.Controllers.V1
         }
 
         /// <summary>
+        /// Retrieves all score stats.
+        /// </summary>
+        /// <param name="competitionId">The competition identifier.</param>
+        /// <param name="seasonId">The season identifier.</param>
+        /// <param name="fullTime">if set to <c>true</c> [full time].</param>
+        /// <returns>All scorelines that have occured and their counts</returns>
+        [Route("Scores/")]
+        [HttpGet]
+        [Produces(typeof(StatsScores))]
+        public async Task<IActionResult> RetrieveAllScoreStats(
+            [FromQuery]int? competitionId = null,
+            [FromQuery]int? seasonId = null,
+            [FromQuery]bool fullTime = true)
+        {
+            var stats = await Task.Run(() => this.statsService.RetrieveAllScoreStats(competitionId, seasonId, fullTime));
+
+            return this.Ok();
+        }
+
+        /// <summary>
         /// Retrieves the score stats.
         /// </summary>
         /// <param name="firstBoxScore">The first box score.</param>
@@ -30,7 +50,7 @@ namespace Futbol.API.Controllers.V1
         /// <param name="competitionId">The competition identifier.</param>
         /// <param name="seasonId">The season identifier.</param>
         /// <param name="fullTime">if set to <c>true</c> [full time].</param>
-        /// <returns></returns>
+        /// <returns>Stats based around the provided box score</returns>
         [Route("Scores/{firstBoxScore}/{secondBoxScore}")]
         [HttpGet]
         [Produces(typeof(StatsScores))]
@@ -52,7 +72,7 @@ namespace Futbol.API.Controllers.V1
         /// <param name="teamId">The team identifier.</param>
         /// <param name="competitionId">The competition identifier.</param>
         /// <param name="seasonId">The season identifier.</param>
-        /// <returns></returns>
+        /// <returns>Stats based around the provided team</returns>
         [Route("Teams/{teamId}")]
         [HttpGet]
         [Produces(typeof(StatsTeam))]
@@ -70,7 +90,7 @@ namespace Futbol.API.Controllers.V1
         /// <param name="awayTeam">The away team.</param>
         /// <param name="competitionId">The competition identifier.</param>
         /// <param name="seasonId">The season identifier.</param>
-        /// <returns></returns>
+        /// <returns>Stats based around the provided fixture between two teams</returns>
         [Route("Fixtures/{homeTeam}/{awayTeam}")]
         [HttpGet]
         [Produces(typeof(StatsFixtures))]

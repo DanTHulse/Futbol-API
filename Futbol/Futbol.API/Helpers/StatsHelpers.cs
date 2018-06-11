@@ -8,9 +8,9 @@ namespace Futbol.API.Helpers
 {
     public static class StatsHelpers
     {
-        public static StatsResults BuildResults(this Match match)
+        public static StatsMatch BuildResults(this Match match)
         {
-            return new StatsResults
+            return new StatsMatch
             {
                 BoxScore = $"{match.MatchData.FTHomeGoals}-{match.MatchData.FTAwayGoals}",
                 HomeTeam = $"{match.HomeTeam.TeamName}",
@@ -49,14 +49,15 @@ namespace Futbol.API.Helpers
             return (all: allMatches, home: homeMatches, away: awayMatches);
         }
 
-        public static StatsTeamScores CalculateBiggestResult(this IEnumerable<Match> matches)
+        public static StatsScores CalculateBiggestResult(this IEnumerable<Match> matches)
         {
             var orderedMatches = matches.OrderByDescending(o => o.MatchData.FTGoals_1);
 
             var filteredMatches = orderedMatches.Where(w => w.MatchData.FTGoals_1 == orderedMatches.First().MatchData.FTGoals_1).OrderBy(o => o.MatchDate);
 
-            return new StatsTeamScores
+            return new StatsScores
             {
+                BoxScore = $"{filteredMatches.First().MatchData.FTGoals_1.Value}-{filteredMatches.First().MatchData.FTGoals_2.Value}",
                 FirstMatch = filteredMatches.First().BuildResults(),
                 LastMatch = filteredMatches.Last().BuildResults(),
                 Count = filteredMatches.Count(),

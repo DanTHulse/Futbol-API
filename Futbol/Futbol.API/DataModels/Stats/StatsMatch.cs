@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Futbol.API.DataModels.Stats
 {
-    public class StatsResults
+    public class StatsMatch
     {
         public string HomeTeam { get; set; }
 

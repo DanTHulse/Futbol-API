@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.PlatformAbstractions;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace Futbol.API
@@ -34,11 +35,14 @@ namespace Futbol.API
         /// <param name="services">The services.</param>
         public void ConfigureServices(IServiceCollection services)
         {
+            var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+
             services.AddMvc();
             services.AddSwaggerGen(c =>
             {
                 c.DescribeAllEnumsAsStrings();
                 c.SwaggerDoc("v1", new Info { Title = "Futbol API", Version = "v1" });
+                c.IncludeXmlComments($"{basePath}\\Futbol.API.xml");
             });
 
             services.Scan(s => s.FromAssemblyOf<IRepository>().AddClasses(c => c.AssignableTo<IRepository>()).AsImplementedInterfaces().WithTransientLifetime());

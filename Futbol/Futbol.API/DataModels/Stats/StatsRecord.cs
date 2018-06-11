@@ -2,7 +2,7 @@
 
 namespace Futbol.API.DataModels.Stats
 {
-    public class StatsRecords
+    public class StatsRecord
     {
         public int GamesPlayed => (this.GamesWon + this.GamesLost + this.GamesDrawn);
 

@@ -9,14 +9,14 @@ namespace Futbol.API.DataModels.Stats
 
         public string AwayTeam { get; set; }
 
-        public StatsResults FirstResult { get; set; }
+        public StatsMatch FirstResult { get; set; }
 
-        public IEnumerable<StatsResults> LastResults { get; set; }
+        public IEnumerable<StatsMatch> LastResults { get; set; }
 
-        public StatsRecords HomeTeamRecord { get; set; }
+        public StatsRecord HomeTeamRecord { get; set; }
 
         public Uri ReverseFixture { get; set; }
 
-        public Uri FixtureMatches { get; set; }
+        public Uri AllMatches { get; set; }
     }
 }
