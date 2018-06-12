@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Futbol.API.DataModels.Enumerations;
 using Futbol.API.DataModels.Stats;
@@ -87,7 +86,7 @@ namespace Futbol.API.Services
         /// <param name="seasonId">The season identifier.</param>
         /// <param name="fullTime">if set to <c>true</c> [full time].</param>
         /// <returns></returns>
-        public IEnumerable<StatsScores> RetrieveAllScoreStats(int? competitionId, int? seasonId, bool fullTime)
+        public StatsScorigami RetrieveAllScoreStats(int? competitionId, int? seasonId, bool fullTime)
         {
             var matchData = this.futbolRepository.RetrieveMatchData(competitionId, seasonId, fullTime);
 
@@ -96,14 +95,14 @@ namespace Futbol.API.Services
                 .Select(grp => new { Item = grp.Key, Count = grp.Count() })
                 .OrderBy(o => o.Item.FTGoals_1).ThenBy(o => o.Item.FTGoals_2);
 
-            var stats = groupedMatchScores.Select(s => new StatsScores
+            var stats = groupedMatchScores.Where(w => w.Item.FTGoals_1.HasValue).Select(s => new StatsScorigamiScores
             {
                 BoxScore = $"{s.Item.FTGoals_1}-{s.Item.FTGoals_2}",
                 Count = s.Count,
-                AllMatches = new Uri($"{this.FBUrl}?boxScoreFirst={s.Item.FTGoals_1}&boxScoreSecond={s.Item.FTGoals_2}&competitionId={competitionId}&seasonId={seasonId}")
+                ScoreStats = new Uri($"{this.StatsUrl}/Scores/{s.Item.FTGoals_1}/{s.Item.FTGoals_2}&competitionId={competitionId}&seasonId={seasonId}&fullTime={fullTime}")
             }).ToList();
 
-            return stats;
+            return new StatsScorigami { Scores = stats };
         }
 
         /// <summary>

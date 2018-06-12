@@ -2,8 +2,10 @@
 {
     public enum DataSource
     {
-        FootballDataApi = 1,
+        FootballData = 1,
 
         FootballBetData = 2,
+
+        FootballAPI = 3
     }
 }

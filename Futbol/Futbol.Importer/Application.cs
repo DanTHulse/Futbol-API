@@ -15,10 +15,13 @@ namespace Futbol.Importer
 
         private readonly IFootballBetDataService footballBetDataService;
 
-        public Application(IFootballDataService footballDataService, IFootballBetDataService footballBetDataService)
+        private readonly IFootballAPIService footballAPIService;
+
+        public Application(IFootballDataService footballDataService, IFootballBetDataService footballBetDataService, IFootballAPIService footballAPIService)
         {
             this.footballDataService = footballDataService;
             this.footballBetDataService = footballBetDataService;
+            this.footballAPIService = footballAPIService;
         }
 
         public void Run()
@@ -38,17 +41,35 @@ namespace Futbol.Importer
 
                 switch (selection)
                 {
-                    case DataSource.FootballDataApi:
+                    case DataSource.FootballData:
                         exit = this.FootballDataApiImport();
                         break;
                     case DataSource.FootballBetData:
                         exit = this.FootballBetDataImport();
+                        break;
+                    case DataSource.FootballAPI:
+                        exit = this.FootballAPIImport();
                         break;
                     default:
                         exit = 1;
                         break;
                 }
             } while (exit == 0);
+        }
+
+        private int FootballAPIImport()
+        {
+            ConsoleLog.Header($"API.Football Importer");
+            Console.WriteLine();
+
+            ConsoleLog.Header($"Import complete, do you want to continue? [Y/n]");
+
+            if (Console.ReadLine() == "n")
+            {
+                return 1;
+            }
+
+            return 0;
         }
 
         /// <summary>

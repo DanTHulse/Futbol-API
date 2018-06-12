@@ -23,16 +23,16 @@ namespace Futbol.API.Controllers.V1
         }
 
         /// <summary>
-        /// Retrieves all score stats.
+        /// Retrieves Scorigami stats.
         /// </summary>
         /// <param name="competitionId">The competition identifier.</param>
         /// <param name="seasonId">The season identifier.</param>
         /// <param name="fullTime">if set to <c>true</c> [full time].</param>
-        /// <returns>All scorelines that have occured and their counts</returns>
-        [Route("Scores/")]
+        /// <returns>Scorigami</returns>
+        [Route("Scorigami/")]
         [HttpGet]
-        [Produces(typeof(StatsScores))]
-        public async Task<IActionResult> RetrieveAllScoreStats(
+        [Produces(typeof(StatsScorigami))]
+        public async Task<IActionResult> RetrieveScorigami(
             [FromQuery]int? competitionId = null,
             [FromQuery]int? seasonId = null,
             [FromQuery]bool fullTime = true)

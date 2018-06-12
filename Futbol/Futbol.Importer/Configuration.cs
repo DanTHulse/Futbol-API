@@ -11,6 +11,10 @@
             public string FootballDataApiUrl { get; set; }
 
             public string FootballDataApiKey { get; set; }
+
+            public string APIFootballApiUrl {get;set;}
+
+            public string APIFootballApiKey { get; set; }
         }
 
         public class ConnectionStringConfig

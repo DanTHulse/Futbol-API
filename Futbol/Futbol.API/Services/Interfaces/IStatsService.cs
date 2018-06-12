@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Futbol.API.DataModels.Stats;
+﻿using Futbol.API.DataModels.Stats;
 
 namespace Futbol.API.Services.Interfaces
 {
@@ -23,7 +22,7 @@ namespace Futbol.API.Services.Interfaces
         /// <param name="seasonId">The season identifier.</param>
         /// <param name="fullTime">if set to <c>true</c> [full time].</param>
         /// <returns></returns>
-        IEnumerable<StatsScores> RetrieveAllScoreStats(int? competitionId, int? seasonId, bool fullTime);
+        StatsScorigami RetrieveAllScoreStats(int? competitionId, int? seasonId, bool fullTime);
 
         /// <summary>
         /// Retrieves the team stats.
