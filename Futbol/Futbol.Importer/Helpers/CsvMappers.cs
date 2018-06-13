@@ -1,4 +1,5 @@
 ﻿using CsvHelper.Configuration;
+using Futbol.Importer.DataModels.EngSoccorData;
 using Futbol.Importer.DataModels.FootballBetData;
 
 namespace Futbol.Importer.Helpers
@@ -22,6 +23,22 @@ namespace Futbol.Importer.Helpers
             Map(m => m.AwayShots).Name("AS");
             Map(m => m.HomeShotsOnTarget).Name("HST");
             Map(m => m.AwayShotsOnTarget).Name("AST");
+        }
+    }
+
+    public sealed class EngSoccorDataMap : ClassMap<Fixtures>
+    {
+        public EngSoccorDataMap()
+        {
+            Map(m => m.Division).Name("division");
+            Map(m => m.Season).Name("Season");
+            Map(m => m.DateString).Name("Date");
+            Map(m => m.HomeTeam).Name("home");
+            Map(m => m.AwayTeam).Name("visitor", "away");
+            Map(m => m.FTHomeGoals).Name("hgoal");
+            Map(m => m.FTAwayGoals).Name("vgoal", "agoal");
+            Map(m => m.FTScore).Name("FT");
+            Map(m => m.Tier).Name("tier");
         }
     }
 }

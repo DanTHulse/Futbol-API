@@ -15,9 +15,9 @@ namespace Futbol.Importer
 
         private readonly IFootballBetDataService footballBetDataService;
 
-        private readonly IFootballAPIService footballAPIService;
+        private readonly IEnglishSoccorDataService footballAPIService;
 
-        public Application(IFootballDataService footballDataService, IFootballBetDataService footballBetDataService, IFootballAPIService footballAPIService)
+        public Application(IFootballDataService footballDataService, IFootballBetDataService footballBetDataService, IEnglishSoccorDataService footballAPIService)
         {
             this.footballDataService = footballDataService;
             this.footballBetDataService = footballBetDataService;
@@ -47,8 +47,8 @@ namespace Futbol.Importer
                     case DataSource.FootballBetData:
                         exit = this.FootballBetDataImport();
                         break;
-                    case DataSource.FootballAPI:
-                        exit = this.FootballAPIImport();
+                    case DataSource.EngSoccarData:
+                        exit = this.EngSoccorData();
                         break;
                     default:
                         exit = 1;
@@ -57,10 +57,27 @@ namespace Futbol.Importer
             } while (exit == 0);
         }
 
-        private int FootballAPIImport()
+        private int EngSoccorData()
         {
-            ConsoleLog.Header($"API.Football Importer");
+            ConsoleLog.Header($"EngSoccor Data Importer");
             Console.WriteLine();
+
+            Console.WriteLine("Please select a folder below");
+
+            FileInfo[] files = new DirectoryInfo($"{PROJECTDATA_DIRECTORY}\\Futbol\\EngSoccerData").GetFiles();
+
+            for (int i = 0; i < files.ToList().Count; i++)
+            {
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write($"{i} - ");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.Write($"{files[i].Name}");
+            }
+
+            Console.WriteLine();
+            Console.WriteLine();
+            var fileSelection = ConsoleEx.ReadNumber();
 
             ConsoleLog.Header($"Import complete, do you want to continue? [Y/n]");
 
