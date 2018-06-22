@@ -8,7 +8,7 @@ using Futbol.Importer.Repositories.Interfaces;
 
 namespace Futbol.Importer.Repositories
 {
-    public class EnglishSoccorDataRepository : IEnglishSoccorDataRepository
+    public class EnglishSoccerDataRepository : IEnglishSoccerDataRepository
     {
         /// <summary>
         /// The configuration
@@ -16,10 +16,10 @@ namespace Futbol.Importer.Repositories
         private readonly Configuration config;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EnglishSoccorDataRepository"/> class.
+        /// Initializes a new instance of the <see cref="EnglishSoccerDataRepository"/> class.
         /// </summary>
         /// <param name="config">The configuration.</param>
-        public EnglishSoccorDataRepository(Configuration config)
+        public EnglishSoccerDataRepository(Configuration config)
         {
             this.config = config;
         }

@@ -6,7 +6,7 @@ namespace Futbol.Importer.DataModels.EngSoccorData
     {
         public string DateString { get; set; }
 
-        public DateTime? Date => this.DateString == "N/A" ? (DateTime?)null : DateTime.Parse(this.DateString);
+        public DateTime? Date => this.DateString == "N/A" || this.DateString == "NA" || this.DateString == "" ? new DateTime(this.Season, 1, 1) : DateTime.Parse(this.DateString);
 
         public int Season { get; set; }
 
@@ -16,9 +16,9 @@ namespace Futbol.Importer.DataModels.EngSoccorData
 
         public string FTScore { get; set; }
 
-        public int FTHomeGoals { get; set; }
+        public int? FTHomeGoals { get; set; }
 
-        public int FTAwayGoals { get; set; }
+        public int? FTAwayGoals { get; set; }
 
         public string Division { get; set; }
 

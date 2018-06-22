@@ -15,3 +15,14 @@
 	CONSTRAINT [FK_Team_AwayTeamId] FOREIGN KEY ([AwayTeamId]) REFERENCES [football].[Team]([TeamId]),
 	CONSTRAINT [UC_MatchUid] UNIQUE ([MatchUid])
 )
+
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Match_CompetitionId] ON [football].[Match] ([CompetitionId]) INCLUDE ([SeasonId],[MatchDate],[HomeTeamId],[AwayTeamId],[MatchUid])
+GO
+CREATE NONCLUSTERED INDEX [IX_Match_SeasonId] ON [football].[Match] ([SeasonId]) INCLUDE ([CompetitionId],[MatchDate],[HomeTeamId],[AwayTeamId],[MatchUid])
+GO
+CREATE NONCLUSTERED INDEX [IX_Match_AwayTeamId] ON [football].[Match] ([AwayTeamId]) INCLUDE ([CompetitionId],[SeasonId],[MatchDate],[HomeTeamId],[MatchUid])
+GO
+CREATE NONCLUSTERED INDEX [IX_Match_HomeTeamId] ON [football].[Match] ([HomeTeamId]) INCLUDE ([CompetitionId],[SeasonId],[MatchDate],[AwayTeamId],[MatchUid])
+GO

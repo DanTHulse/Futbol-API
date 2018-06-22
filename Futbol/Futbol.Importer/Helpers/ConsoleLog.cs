@@ -8,13 +8,18 @@ namespace Futbol.Importer.Helpers
         /// Logs start message.
         /// </summary>
         /// <param name="text">The text.</param>
-        public static void Start(string text)
+        public static void Start(string text, string status = "")
         {
+            if (string.IsNullOrEmpty(status))
+            {
+                status = " - Started";
+            }
+
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write(text);
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write($" - Started");
+            Console.Write($" - {status}");
         }
 
         /// <summary>

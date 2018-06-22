@@ -99,7 +99,7 @@ namespace Futbol.API.Services
             {
                 BoxScore = $"{s.Item.FTGoals_1}-{s.Item.FTGoals_2}",
                 Count = s.Count,
-                ScoreStats = new Uri($"{this.StatsUrl}/Scores/{s.Item.FTGoals_1}/{s.Item.FTGoals_2}&competitionId={competitionId}&seasonId={seasonId}&fullTime={fullTime}")
+                ScoreStats = new Uri($"{this.StatsUrl}/Scores/{s.Item.FTGoals_1}/{s.Item.FTGoals_2}?competitionId={competitionId}&seasonId={seasonId}&fullTime={fullTime}")
             }).ToList();
 
             return new StatsScorigami { Scores = stats };

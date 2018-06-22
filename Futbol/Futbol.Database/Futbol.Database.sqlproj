@@ -60,6 +60,8 @@
     <Folder Include="Tables" />
     <Folder Include="Tables\football" />
     <Folder Include="Schemas" />
+    <Folder Include="Stored Procedures" />
+    <Folder Include="Stored Procedures\football" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Schemas\football.sql" />
@@ -68,6 +70,7 @@
     <Build Include="Tables\football\Team.sql" />
     <Build Include="Tables\football\Competition.sql" />
     <Build Include="Tables\football\Season.sql" />
+    <Build Include="Stored Procedures\football\RetrieveScorigami.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Futbol.Database.publish.xml" />

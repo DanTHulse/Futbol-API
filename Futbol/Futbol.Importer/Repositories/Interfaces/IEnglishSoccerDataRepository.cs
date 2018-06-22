@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using Futbol.Importer.DataModels.EngSoccorData;
 
 namespace Futbol.Importer.Repositories.Interfaces
 {
-    public interface IEnglishSoccorDataRepository : IRepository
+    public interface IEnglishSoccerDataRepository : IRepository
     {
         /// <summary>
         /// Parses the football bet data.

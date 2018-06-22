@@ -6,6 +6,6 @@
 
         FootballBetData = 2,
 
-        EngSoccarData = 3
+        EngSoccerData = 3
     }
 }

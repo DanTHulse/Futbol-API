@@ -58,7 +58,7 @@ namespace Futbol.Importer.Repositories
         /// <returns>Season by year</returns>
         public Season RetrieveSeasonByStartYear(int seasonStartYear)
         {
-            return this.context.Season.FirstOrDefault(w => w.SeasonPeriod.StartsWith(seasonStartYear.ToString()));
+            return this.context.Season.FirstOrDefault(w => w.SeasonPeriod.StartsWith($"{seasonStartYear.ToString()}/"));
         }
 
         /// <summary>
@@ -68,6 +68,13 @@ namespace Futbol.Importer.Repositories
         /// <returns>Competition by name</returns>
         public Competition RetrieveCompetitionByName(string name)
         {
+            var competition = this.context.Competition.FirstOrDefault(w => w.CompetitionName == name);
+
+            if (competition.CompetitionId != 0)
+            {
+                return competition;
+            }
+
             return this.context.Competition.FirstOrDefault(w => name.StartsWith(w.CompetitionName));
         }
 
@@ -104,7 +111,7 @@ namespace Futbol.Importer.Repositories
                         this.context.MatchData.Add(matchData);
                         this.context.SaveChanges();
 
-                        ConsoleLog.Information($"Inserted Match:", $"{record.HomeTeamId} V {record.AwayTeamId}");
+                        //ConsoleLog.Information($"Inserted Match:", $"{record.HomeTeamId} V {record.AwayTeamId}");
                     }
                 }
                 catch (Exception ex)

@@ -15,13 +15,13 @@ namespace Futbol.Importer
 
         private readonly IFootballBetDataService footballBetDataService;
 
-        private readonly IEnglishSoccorDataService footballAPIService;
+        private readonly IEnglishSoccerDataService englishSoccorDataService;
 
-        public Application(IFootballDataService footballDataService, IFootballBetDataService footballBetDataService, IEnglishSoccorDataService footballAPIService)
+        public Application(IFootballDataService footballDataService, IFootballBetDataService footballBetDataService, IEnglishSoccerDataService englishSoccorDataService)
         {
             this.footballDataService = footballDataService;
             this.footballBetDataService = footballBetDataService;
-            this.footballAPIService = footballAPIService;
+            this.englishSoccorDataService = englishSoccorDataService;
         }
 
         public void Run()
@@ -47,7 +47,7 @@ namespace Futbol.Importer
                     case DataSource.FootballBetData:
                         exit = this.FootballBetDataImport();
                         break;
-                    case DataSource.EngSoccarData:
+                    case DataSource.EngSoccerData:
                         exit = this.EngSoccorData();
                         break;
                     default:
@@ -61,10 +61,29 @@ namespace Futbol.Importer
         {
             ConsoleLog.Header($"EngSoccor Data Importer");
             Console.WriteLine();
-
             Console.WriteLine("Please select a folder below");
 
-            FileInfo[] files = new DirectoryInfo($"{PROJECTDATA_DIRECTORY}\\Futbol\\EngSoccerData").GetFiles();
+            DirectoryInfo[] subFolders = new DirectoryInfo($"{PROJECTDATA_DIRECTORY}\\Futbol\\EngSoccerData").GetDirectories("*.*", SearchOption.AllDirectories);
+
+            for (int i = 0; i < subFolders.ToList().Count; i++)
+            {
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write($"{i} - ");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.Write($"{subFolders[i].Name}");
+            }
+
+            Console.WriteLine();
+            Console.WriteLine();
+            var selection = ConsoleEx.ReadNumber();
+
+            Console.Clear();
+            ConsoleLog.Header($"EngSoccor Data Importer: {subFolders[selection].Name}");
+            Console.WriteLine();
+            Console.WriteLine("Please select a file below");
+
+            FileInfo[] files = new DirectoryInfo(subFolders[selection].FullName).GetFiles();
 
             for (int i = 0; i < files.ToList().Count; i++)
             {
@@ -78,6 +97,8 @@ namespace Futbol.Importer
             Console.WriteLine();
             Console.WriteLine();
             var fileSelection = ConsoleEx.ReadNumber();
+
+            this.englishSoccorDataService.ImportData(files[fileSelection].FullName);
 
             ConsoleLog.Header($"Import complete, do you want to continue? [Y/n]");
 
