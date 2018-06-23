@@ -1,4 +1,5 @@
 ﻿using Futbol.Common.Models.Football;
+using Futbol.Common.Models.Stats;
 using Microsoft.EntityFrameworkCore;
 
 namespace Futbol.Common.Infrastructure
@@ -72,6 +73,13 @@ namespace Futbol.Common.Infrastructure
                 entity.ToTable("Team", schema: "football");
 
                 entity.HasKey(k => k.TeamId);
+            });
+
+            modelBuilder.Entity<ScorigamiScores>(entity =>
+            {
+                entity.HasKey(k => new { k.Score_1, k.Score_2 });
+                entity.Ignore(i => i.BoxScore);
+                entity.Ignore(i => i.ScoreStats);
             });
         }
     }

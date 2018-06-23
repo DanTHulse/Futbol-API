@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:61614/",
+      "applicationUrl": "http://localhost:61616/",
       "sslPort": 0
     }
   },
@@ -13,7 +13,8 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "use64Bit": true
     },
     "Futbol.API": {
       "commandName": "Project",

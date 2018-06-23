@@ -14,10 +14,20 @@ using Swashbuckle.AspNetCore.Swagger;
 
 namespace Futbol.API
 {
+    /// <summary>
+    /// The startyp class
+    /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// Gets the configuration.
+        /// </summary>
         public IConfigurationRoot Configuration { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Startup"/> class.
+        /// </summary>
+        /// <param name="env">The env.</param>
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -70,6 +80,8 @@ namespace Futbol.API
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "FUTBOL API V1");
                 c.RoutePrefix = string.Empty;
+                c.DocExpansion(DocExpansion.None);
+                
             });
 
             app.UseMiddleware(typeof(ErrorHandlerMiddleware));

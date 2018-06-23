@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Futbol.Common.Models.Stats;
 
 namespace Futbol.API.DataModels.Stats
 {
@@ -27,27 +27,6 @@ namespace Futbol.API.DataModels.Stats
         /// <summary>
         /// Gets or sets the scores.
         /// </summary>
-        public IEnumerable<StatsScorigamiScores> Scores { get; set; }
-    }
-
-    /// <summary>
-    /// Score stats for scorigami
-    /// </summary>
-    public class StatsScorigamiScores
-    {
-        /// <summary>
-        /// Gets or sets the box score.
-        /// </summary>
-        public string BoxScore { get; set; }
-
-        /// <summary>
-        /// Gets or sets the count of the number of occurences of the scoreline.
-        /// </summary>
-        public int Count { get; set; }
-
-        /// <summary>
-        /// Gets or sets the URL for stats with this scoreline.
-        /// </summary>
-        public Uri ScoreStats { get; set; }
+        public IEnumerable<ScorigamiScores> Scores { get; set; }
     }
 }

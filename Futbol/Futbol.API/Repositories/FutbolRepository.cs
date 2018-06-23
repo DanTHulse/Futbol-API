@@ -3,6 +3,7 @@ using System.Linq;
 using Futbol.API.Repositories.Interfaces;
 using Futbol.Common.Infrastructure;
 using Futbol.Common.Models.Football;
+using Futbol.Common.Models.Stats;
 using Microsoft.EntityFrameworkCore;
 
 namespace Futbol.API.Repositories
@@ -56,8 +57,10 @@ namespace Futbol.API.Repositories
                 .Include(i => i.AwayTeam)
                 .Include(i => i.Competition)
                 .Include(i => i.Season)
-                .Where(l => (fullTime && l.MatchData.FTHomeGoals == secondBoxScore && l.MatchData.FTAwayGoals == firstBoxScore)
+                .Where(l => ((fullTime && l.MatchData.FTHomeGoals == secondBoxScore && l.MatchData.FTAwayGoals == firstBoxScore)
                           || (!fullTime && l.MatchData.HTHomeGoals == firstBoxScore && l.MatchData.HTAwayGoals == secondBoxScore))
+                       && ((fullTime && l.MatchData.FTResult == "A")
+                          || !fullTime && l.MatchData.HTResult == "A"))
                 .Where(w => !competitionId.HasValue || w.CompetitionId == competitionId.Value)
                 .Where(w => !seasonId.HasValue || w.SeasonId == seasonId.Value));
 
@@ -124,6 +127,24 @@ namespace Futbol.API.Repositories
                 .Where(w => !seasonId.HasValue || w.Match.SeasonId == seasonId.Value);
 
             return matchData;
+        }
+
+        /// <summary>
+        /// Retrieves the scorigami.
+        /// </summary>
+        /// <param name="competitionId">The competition identifier.</param>
+        /// <param name="seasonId">The season identifier.</param>
+        /// <returns>List of scores for scorigami</returns>
+        public IEnumerable<ScorigamiScores> RetrieveScorigami(int? competitionId, int? seasonId)
+        {
+            if (!competitionId.HasValue)
+                competitionId = 0;
+            if (!seasonId.HasValue)
+                seasonId = 0;
+
+            var data = this.futbolContext.Set<ScorigamiScores>().FromSql("football.RetrieveScorigami @CompetitionId = {0}, @SeasonId = {1}", competitionId, seasonId).ToList();
+
+            return data;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Futbol.Common.Models.Football;
+using Futbol.Common.Models.Stats;
 
 namespace Futbol.API.Repositories.Interfaces
 {
@@ -43,5 +44,13 @@ namespace Futbol.API.Repositories.Interfaces
         /// <param name="fullTime">if set to <c>true</c> [full time].</param>
         /// <returns></returns>
         IEnumerable<MatchData> RetrieveMatchData(int? competitionId, int? seasonId, bool fullTime);
+
+        /// <summary>
+        /// Retrieves the scorigami.
+        /// </summary>
+        /// <param name="competitionId">The competition identifier.</param>
+        /// <param name="seasonId">The season identifier.</param>
+        /// <returns>List of scores for scorigami</returns>
+        IEnumerable<ScorigamiScores> RetrieveScorigami(int? competitionId, int? seasonId);
     }
 }

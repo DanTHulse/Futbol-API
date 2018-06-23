@@ -21,6 +21,6 @@ SELECT
 		,m.[Score_2]
 		,COUNT(m.[MatchId]) AS [Count]
 	FROM matches AS m
-
+	WHERE m.[Score_1] IS NOT NULL
 	GROUP BY m.[Score_1], m.[Score_2]
 	ORDER BY m.[Score_1], m.[Score_2]
