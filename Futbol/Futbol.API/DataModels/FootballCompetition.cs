@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Futbol.API.DataModels
 {
@@ -13,5 +10,14 @@ namespace Futbol.API.DataModels
         public string CompetitionName { get; set; }
 
         public string Country { get; set; }
+
+        public Uri AllMatches { get; set; }
+    }
+
+    public class FootballCompetitionSeason
+    {
+        public FootballCompetition Competition { get; set; }
+
+        public IEnumerable<FootballSeason> Seasons { get; set; }
     }
 }

@@ -8,35 +8,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Futbol.API.Repositories
 {
-    /// <summary>
-    /// The repository for data from the FUTBOL database
-    /// </summary>
-    /// <seealso cref="Futbol.API.Repositories.Interfaces.IFutbolRepository" />
     public class FutbolRepository : IFutbolRepository
     {
-        /// <summary>
-        /// The futbol context
-        /// </summary>
         private readonly FutbolContext futbolContext;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FutbolRepository"/> class.
-        /// </summary>
-        /// <param name="futbolContext">The futbol context.</param>
         public FutbolRepository(FutbolContext futbolContext)
         {
             this.futbolContext = futbolContext;
         }
 
-        /// <summary>
-        /// Retrieves the matches by score.
-        /// </summary>
-        /// <param name="firstBoxScore">The first box score.</param>
-        /// <param name="secondBoxScore">The second box score.</param>
-        /// <param name="competitionId">The competition identifier.</param>
-        /// <param name="seasonId">The season identifier.</param>
-        /// <param name="fullTime">True if searching for Full Time scores</param>
-        /// <returns></returns>
         public IEnumerable<Match> RetrieveMatchesByScore(int firstBoxScore, int secondBoxScore, int? competitionId, int? seasonId, bool fullTime)
         {
             var matches = this.futbolContext.Match
@@ -67,13 +47,6 @@ namespace Futbol.API.Repositories
             return matches.OrderBy(o => o.MatchDate).ToList();
         }
 
-        /// <summary>
-        /// Retrieves the matches by team.
-        /// </summary>
-        /// <param name="teamId">The team identifier.</param>
-        /// <param name="competitionId">The competition identifier.</param>
-        /// <param name="seasonId">The season identifier.</param>
-        /// <returns></returns>
         public IEnumerable<Match> RetrieveMatchesByTeam(int teamId, int? competitionId, int? seasonId)
         {
             var matches = this.futbolContext.Match
@@ -89,14 +62,6 @@ namespace Futbol.API.Repositories
             return matches.OrderBy(o => o.MatchDate).ToList();
         }
 
-        /// <summary>
-        /// Retrieves the matches by fixture.
-        /// </summary>
-        /// <param name="homeTeam">The home team.</param>
-        /// <param name="awayTeam">The away team.</param>
-        /// <param name="competitionId">The competition identifier.</param>
-        /// <param name="seasonId">The season identifier.</param>
-        /// <returns></returns>
         public IEnumerable<Match> RetrieveMatchesByFixture(int homeTeam, int awayTeam, int? competitionId, int? seasonId)
         {
             var matches = this.futbolContext.Match
@@ -112,13 +77,6 @@ namespace Futbol.API.Repositories
             return matches.OrderBy(o => o.MatchDate).ToList();
         }
 
-        /// <summary>
-        /// Retrieves the match scores.
-        /// </summary>
-        /// <param name="competitionId">The competition identifier.</param>
-        /// <param name="seasonId">The season identifier.</param>
-        /// <param name="fullTime">if set to <c>true</c> [full time].</param>
-        /// <returns></returns>
         public IEnumerable<MatchData> RetrieveMatchData(int? competitionId, int? seasonId, bool fullTime)
         {
             var matchData = this.futbolContext.MatchData
@@ -129,12 +87,6 @@ namespace Futbol.API.Repositories
             return matchData;
         }
 
-        /// <summary>
-        /// Retrieves the scorigami.
-        /// </summary>
-        /// <param name="competitionId">The competition identifier.</param>
-        /// <param name="seasonId">The season identifier.</param>
-        /// <returns>List of scores for scorigami</returns>
         public IEnumerable<ScorigamiScores> RetrieveScorigami(int? competitionId, int? seasonId)
         {
             if (!competitionId.HasValue)

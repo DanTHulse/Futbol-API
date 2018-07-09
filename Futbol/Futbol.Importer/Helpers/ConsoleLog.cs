@@ -4,10 +4,6 @@ namespace Futbol.Importer.Helpers
 {
     public static class ConsoleLog
     {
-        /// <summary>
-        /// Logs start message.
-        /// </summary>
-        /// <param name="text">The text.</param>
         public static void Start(string text, string status = "")
         {
             if (string.IsNullOrEmpty(status))
@@ -22,10 +18,6 @@ namespace Futbol.Importer.Helpers
             Console.Write($" - {status}");
         }
 
-        /// <summary>
-        /// Logs header message.
-        /// </summary>
-        /// <param name="text">The text.</param>
         public static void Header(string text)
         {
             Console.WriteLine();
@@ -35,11 +27,6 @@ namespace Futbol.Importer.Helpers
             Console.BackgroundColor = ConsoleColor.Black;
         }
 
-        /// <summary>
-        /// Logs information message.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <param name="status">The status.</param>
         public static void Information(string text, string status)
         {
             Console.WriteLine();
@@ -50,11 +37,6 @@ namespace Futbol.Importer.Helpers
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        /// <summary>
-        /// Logs error message
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <param name="status">The status.</param>
         public static void Error(string text, string status)
         {
             Console.WriteLine();
@@ -64,10 +46,6 @@ namespace Futbol.Importer.Helpers
             Console.Write($" - {status}");
         }
 
-        /// <summary>
-        /// Logs the options
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
         public static void Options<T>() where T : struct, IConvertible
         {
             Type genericType = typeof(T);
@@ -77,7 +55,7 @@ namespace Futbol.Importer.Helpers
                 foreach (T obj in Enum.GetValues(genericType))
                 {
                     Enum enumType = Enum.Parse(typeof(T), obj.ToString()) as Enum;
-                    int x = Convert.ToInt32(enumType); // x is the integer value of enum
+                    int x = Convert.ToInt32(enumType);
                     var value = enumType.ToString();
 
                     Console.WriteLine();

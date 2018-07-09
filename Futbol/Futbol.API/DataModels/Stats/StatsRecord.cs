@@ -17,5 +17,11 @@ namespace Futbol.API.DataModels.Stats
         public decimal LossRatio => Math.Truncate(((decimal)this.GamesLost / (decimal)this.GamesPlayed) * 1000m) / 1000m;
 
         public decimal DrawRatio => Math.Truncate(((decimal)1 - this.WinRatio - this.LossRatio) * 1000m) / 1000m;
+
+        public int GoalsFor { get; set; }
+
+        public int GoalsAgainst { get; set; }
+
+        public string GoalDifference => (this.GoalsFor - this.GoalsAgainst).ToString("+0;-#");
     }
 }

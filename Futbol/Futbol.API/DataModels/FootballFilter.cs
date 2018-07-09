@@ -22,6 +22,10 @@
 
         public int? HalftimeBoxScoreSecond { get; set; }
 
+        public string FullTimeResult { get; set; }
+
+        public string HalfTimeResult { get; set; }
+
         public int? MatchId { get; set; }
     }
 }

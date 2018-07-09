@@ -110,10 +110,6 @@ namespace Futbol.Importer
             return 0;
         }
 
-        /// <summary>
-        /// Imports data from the Football Data API.
-        /// </summary>
-        /// <returns>Exit code</returns>
         private int FootballDataApiImport()
         {
             ConsoleLog.Header($"Football Data API Importer");

@@ -25,10 +25,11 @@ namespace Futbol.API.Controllers.V1
         }
 
         /// <summary>
-        /// Gets the scores.
+        /// Search for football match data.
         /// </summary>
         /// <param name="filter">The match filters</param>
-        /// <param name="fullData">if set to <c>true</c> [full data].</param>
+        /// <param name="page">The page number</param>
+        /// <param name="pageSize">The page size</param>
         /// <returns>A list of matches based on the provided filters</returns>
         [Route("Matches/")]
         [HttpGet]
@@ -46,9 +47,9 @@ namespace Futbol.API.Controllers.V1
         }
 
         /// <summary>
-        /// Gets the competitions.
+        /// Gets all competitions.
         /// </summary>
-        /// <returns>Gets all competitions</returns>
+        /// <returns>All competitions</returns>
         [Route("Competitions/")]
         [HttpGet]
         [Produces(typeof(IEnumerable<FootballCompetition>))]
@@ -60,10 +61,10 @@ namespace Futbol.API.Controllers.V1
         }
 
         /// <summary>
-        /// Gets the competition by identifier.
+        /// Gets the competition by its identifier.
         /// </summary>
         /// <param name="competitionId">The competition identifier.</param>
-        /// <returns>Get specific competition</returns>
+        /// <returns>The specific competition</returns>
         [Route("Competitions/{competitionId:int}")]
         [HttpGet]
         [Produces(typeof(FootballCompetition))]
@@ -80,9 +81,9 @@ namespace Futbol.API.Controllers.V1
         }
 
         /// <summary>
-        /// Gets the seasons.
+        /// Gets all seasons.
         /// </summary>
-        /// <returns>Gets all seasons</returns>
+        /// <returns>All seasons</returns>
         [Route("Seasons/")]
         [HttpGet]
         [Produces(typeof(IEnumerable<FootballSeason>))]
@@ -94,10 +95,10 @@ namespace Futbol.API.Controllers.V1
         }
 
         /// <summary>
-        /// Gets the season by identifier.
+        /// Gets the season by its identifier.
         /// </summary>
         /// <param name="seasonId">The season identifier.</param>
-        /// <returns>Get specific season</returns>
+        /// <returns>The specific season</returns>
         [Route("Seasons/{seasonId:int}")]
         [HttpGet]
         [Produces(typeof(FootballSeason))]
@@ -114,9 +115,9 @@ namespace Futbol.API.Controllers.V1
         }
 
         /// <summary>
-        /// Gets the teams.
+        /// Gets all teams.
         /// </summary>
-        /// <returns>Gets all teams</returns>
+        /// <returns>All teams</returns>
         [Route("Teams/")]
         [HttpGet]
         [Produces(typeof(IEnumerable<FootballTeam>))]
@@ -128,10 +129,10 @@ namespace Futbol.API.Controllers.V1
         }
 
         /// <summary>
-        /// Gets the team by identifier.
+        /// Gets the team by its identifier.
         /// </summary>
         /// <param name="teamId">The team identifier.</param>
-        /// <returns>Gets specific team</returns>
+        /// <returns>The specific team</returns>
         [Route("Teams/{teamId:int}")]
         [HttpGet]
         [Produces(typeof(FootballTeam))]

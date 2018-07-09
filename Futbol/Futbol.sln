@@ -9,7 +9,7 @@ Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Futbol.Database", "Futbol.D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Futbol.Importer", "Futbol.Importer\Futbol.Importer.csproj", "{CCA4AAF7-7BC5-429A-9D19-D4B3DDCE46B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Futbol.Common", "Futbol.Infrastructure\Futbol.Common.csproj", "{28FE481C-23D9-4926-BDAB-AC51FEC9EA36}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Futbol.Common", "Futbol.Infrastructure\Futbol.Common.csproj", "{28FE481C-23D9-4926-BDAB-AC51FEC9EA36}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

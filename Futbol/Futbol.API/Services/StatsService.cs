@@ -8,43 +8,18 @@ using Microsoft.Extensions.Configuration;
 
 namespace Futbol.API.Services
 {
-    /// <summary>
-    /// The stats service
-    /// </summary>
-    /// <seealso cref="Futbol.API.Services.Interfaces.IStatsService" />
     public class StatsService : IStatsService
     {
-        /// <summary>
-        /// The futbol repository
-        /// </summary>
         private readonly IFutbolRepository futbolRepository;
 
-        /// <summary>
-        /// The URL builder service
-        /// </summary>
         private readonly IUrlBuilderService urlService;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StatsService"/> class.
-        /// </summary>
-        /// <param name="futbolRepository">The futbol repository.</param>
-        /// <param name="urlService">The url builder service</param>
-        /// <param name="configuration">The configuration.</param>
         public StatsService(IFutbolRepository futbolRepository, IUrlBuilderService urlService, IConfigurationRoot configuration)
         {
             this.futbolRepository = futbolRepository;
             this.urlService = urlService;
         }
 
-        /// <summary>
-        /// Retrieves the score stats.
-        /// </summary>
-        /// <param name="firstBoxScore">The first box score.</param>
-        /// <param name="secondBoxScore">The second box score.</param>
-        /// <param name="competitionId">The competition identifier.</param>
-        /// <param name="seasonId">The season identifier.</param>
-        /// <param name="fullTime">if set to <c>true</c> [full time].</param>
-        /// <returns></returns>
         public StatsScores RetrieveScoreStats(int firstBoxScore, int secondBoxScore, int? competitionId, int? seasonId, bool fullTime)
         {
             var matches = this.futbolRepository.RetrieveMatchesByScore(firstBoxScore, secondBoxScore, competitionId, seasonId, fullTime);
@@ -72,13 +47,6 @@ namespace Futbol.API.Services
             return scoreStats;
         }
 
-        /// <summary>
-        /// Retrieves all score stats.
-        /// </summary>
-        /// <param name="competitionId">The competition identifier.</param>
-        /// <param name="seasonId">The season identifier.</param>
-        /// <param name="fullTime">if set to <c>true</c> [full time].</param>
-        /// <returns></returns>
         public StatsScorigami RetrieveAllScoreStats(int? competitionId, int? seasonId, bool fullTime)
         {
             var matchData = this.futbolRepository.RetrieveScorigami(competitionId, seasonId);
@@ -90,13 +58,6 @@ namespace Futbol.API.Services
             return new StatsScorigami { Scores = stats };
         }
 
-        /// <summary>
-        /// Retrieves the team stats.
-        /// </summary>
-        /// <param name="teamId">The team identifier.</param>
-        /// <param name="competitionId">The competition identifier.</param>
-        /// <param name="seasonId">The season identifier.</param>
-        /// <returns></returns>
         public StatsTeam RetrieveTeamStats(int teamId, int? competitionId, int? seasonId)
         {
             var matches = this.futbolRepository.RetrieveMatchesByTeam(teamId, competitionId, seasonId);
@@ -122,19 +83,25 @@ namespace Futbol.API.Services
                 {
                     GamesWon = wins.all.Count(),
                     GamesLost = losses.all.Count(),
-                    GamesDrawn = draws.all.Count()
+                    GamesDrawn = draws.all.Count(),
+                    GoalsFor = (wins.all.Sum(s => s.MatchData.FTGoals_1) + losses.all.Sum(s => s.MatchData.FTGoals_2) + draws.all.Sum(s => s.MatchData.FTGoals_1)).Value,
+                    GoalsAgainst = (wins.all.Sum(s => s.MatchData.FTGoals_2) + losses.all.Sum(s => s.MatchData.FTGoals_1) + draws.all.Sum(s => s.MatchData.FTGoals_1)).Value
                 },
                 HomeRecord = new StatsRecord
                 {
                     GamesWon = wins.home.Count(),
                     GamesLost = losses.home.Count(),
-                    GamesDrawn = draws.home.Count()
+                    GamesDrawn = draws.home.Count(),
+                    GoalsFor = (wins.home.Sum(s => s.MatchData.FTGoals_1) + losses.home.Sum(s => s.MatchData.FTGoals_2) + draws.home.Sum(s => s.MatchData.FTGoals_1)).Value,
+                    GoalsAgainst = (wins.home.Sum(s => s.MatchData.FTGoals_2) + losses.home.Sum(s => s.MatchData.FTGoals_1) + draws.home.Sum(s => s.MatchData.FTGoals_1)).Value
                 },
                 AwayRecord = new StatsRecord
                 {
                     GamesWon = wins.away.Count(),
                     GamesLost = losses.away.Count(),
-                    GamesDrawn = draws.away.Count()
+                    GamesDrawn = draws.away.Count(),
+                    GoalsFor = (wins.away.Sum(s => s.MatchData.FTGoals_1) + losses.away.Sum(s => s.MatchData.FTGoals_2) + draws.away.Sum(s => s.MatchData.FTGoals_1)).Value,
+                    GoalsAgainst = (wins.away.Sum(s => s.MatchData.FTGoals_2) + losses.away.Sum(s => s.MatchData.FTGoals_1) + draws.away.Sum(s => s.MatchData.FTGoals_1)).Value
                 },
                 MostGamesPlayedAgainst = matches.CalculateMostPlayed(team.TeamId),
                 MostWinsAgainst = wins.all.CalculateMostPlayed(team.TeamId),
@@ -142,15 +109,12 @@ namespace Futbol.API.Services
                 MostDrawsAgainst = draws.all.CalculateMostPlayed(team.TeamId)
             };
 
-            teamStats.BiggestWin.AllMatches = this.urlService.AllMatchesForTeamScoreline(teamStats.BiggestWin.Goals_1, teamStats.BiggestWin.Goals_2, teamId, competitionId, seasonId);
             teamStats.BiggestWin.FirstMatch.MatchData = this.urlService.MatchData(teamStats.BiggestWin.FirstMatch.MatchId);
             teamStats.BiggestWin.LastMatch.MatchData = this.urlService.MatchData(teamStats.BiggestWin.LastMatch.MatchId);
 
-            teamStats.BiggestLoss.AllMatches = this.urlService.AllMatchesForTeamScoreline(teamStats.BiggestLoss.Goals_1, teamStats.BiggestLoss.Goals_2, teamId, competitionId, seasonId);
             teamStats.BiggestLoss.FirstMatch.MatchData = this.urlService.MatchData(teamStats.BiggestLoss.FirstMatch.MatchId);
             teamStats.BiggestLoss.LastMatch.MatchData = this.urlService.MatchData(teamStats.BiggestLoss.LastMatch.MatchId);
 
-            teamStats.BiggestDraw.AllMatches = this.urlService.AllMatchesForTeamScoreline(teamStats.BiggestDraw.Goals_1, teamStats.BiggestDraw.Goals_2, teamId, competitionId, seasonId);
             teamStats.BiggestDraw.FirstMatch.MatchData = this.urlService.MatchData(teamStats.BiggestDraw.FirstMatch.MatchId);
             teamStats.BiggestDraw.LastMatch.MatchData = this.urlService.MatchData(teamStats.BiggestDraw.LastMatch.MatchId);
 
@@ -162,14 +126,6 @@ namespace Futbol.API.Services
             return teamStats;
         }
 
-        /// <summary>
-        /// Retrieves the fixtures stats.
-        /// </summary>
-        /// <param name="homeTeam">The home team.</param>
-        /// <param name="awayTeam">The away team.</param>
-        /// <param name="competitionId">The conpetition identifier.</param>
-        /// <param name="seasonId">The season identifier.</param>
-        /// <returns></returns>
         public StatsFixtures RetrieveFixturesStats(int homeTeam, int awayTeam, int? competitionId, int? seasonId)
         {
             var matches = this.futbolRepository.RetrieveMatchesByFixture(homeTeam, awayTeam, competitionId, seasonId);

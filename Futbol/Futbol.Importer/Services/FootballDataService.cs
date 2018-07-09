@@ -10,31 +10,16 @@ namespace Futbol.Importer.Services
 {
     public class FootballDataService : IFootballDataService
     {
-        /// <summary>
-        /// The football data repository
-        /// </summary>
         private readonly IFootballDataRepository footballDataRepository;
 
-        /// <summary>
-        /// The futbol service
-        /// </summary>
         private readonly IFutbolService futbolService;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FootballDataService"/> class.
-        /// </summary>
-        /// <param name="footballDataRepository">The football data repository.</param>
-        /// <param name="futbolService">The futbol service.</param>
         public FootballDataService(IFootballDataRepository footballDataRepository, IFutbolService futbolService)
         {
             this.footballDataRepository = footballDataRepository;
             this.futbolService = futbolService;
         }
 
-        /// <summary>
-        /// Retrieves the competitions by season.
-        /// </summary>
-        /// <param name="seasonStartYear">The season start year.</param>
         public void RetrieveCompetitionsBySeason(int seasonStartYear)
         {
             ConsoleLog.Start("Retrieving competitions");
@@ -70,11 +55,6 @@ namespace Futbol.Importer.Services
             }
         }
 
-        /// <summary>
-        /// Maps the records.
-        /// </summary>
-        /// <param name="competition">The competition.</param>
-        /// <param name="seasonStartYear">The season start year.</param>
         private void MapRecords(Competitions competition, int seasonStartYear)
         {
             var seasonCode = (seasonStartYear % 100).ToString().PadLeft(2, '0');
@@ -111,12 +91,6 @@ namespace Futbol.Importer.Services
             this.futbolService.InsertMatches(matches);
         }
 
-        /// <summary>
-        /// Calculates the result.
-        /// </summary>
-        /// <param name="homeGoals">The home goals.</param>
-        /// <param name="awayGoals">The away goals.</param>
-        /// <returns></returns>
         private string CalculateResult(int? homeGoals, int? awayGoals)
         {
             if (homeGoals == null)
@@ -129,13 +103,6 @@ namespace Futbol.Importer.Services
                 return "D";
         }
 
-        /// <summary>
-        /// Builds the match uid.
-        /// </summary>
-        /// <param name="homeTeam">The home team.</param>
-        /// <param name="awayTeam">The away team.</param>
-        /// <param name="matchDate">The match date.</param>
-        /// <returns></returns>
         private string BuildMatchUid(string homeTeam, string awayTeam, DateTime matchDate)
         {
             var homeTeamTag = homeTeam.Replace(" ", "").Replace(".", "").Left(5).ToUpper();

@@ -14,20 +14,10 @@ using Swashbuckle.AspNetCore.Swagger;
 
 namespace Futbol.API
 {
-    /// <summary>
-    /// The startyp class
-    /// </summary>
     public class Startup
     {
-        /// <summary>
-        /// Gets the configuration.
-        /// </summary>
         public IConfigurationRoot Configuration { get; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Startup"/> class.
-        /// </summary>
-        /// <param name="env">The env.</param>
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -39,10 +29,6 @@ namespace Futbol.API
             this.Configuration = builder.Build();
         }
 
-        /// <summary>
-        /// Configures the services the application needs
-        /// </summary>
-        /// <param name="services">The services.</param>
         public void ConfigureServices(IServiceCollection services)
         {
             var basePath = PlatformServices.Default.Application.ApplicationBasePath;
@@ -62,12 +48,6 @@ namespace Futbol.API
             services.AddSingleton<IConfigurationRoot>(this.Configuration);
         }
 
-        /// <summary>
-        /// Configures the specified application itself.
-        /// </summary>
-        /// <param name="app">The application.</param>
-        /// <param name="env">The environment</param>
-        /// <param name="loggerFactory">The logger factory.</param>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())

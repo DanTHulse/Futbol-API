@@ -2,15 +2,8 @@
 
 namespace Futbol.Importer.Helpers
 {
-    /// <summary>
-    /// Extension methods for the Console
-    /// </summary>
     public static class ConsoleEx
     {
-        /// <summary>
-        /// Reads the number input from the console, does not allow characters.
-        /// </summary>
-        /// <returns>string of numbers entered</returns>
         public static int ReadNumber()
         {
             string value = "";

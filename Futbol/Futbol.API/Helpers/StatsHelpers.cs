@@ -53,7 +53,9 @@ namespace Futbol.API.Helpers
         {
             var orderedMatches = matches.OrderByDescending(o => o.MatchData.FTGoals_1);
 
-            var filteredMatches = orderedMatches.Where(w => w.MatchData.FTGoals_1 == orderedMatches.First().MatchData.FTGoals_1).OrderBy(o => o.MatchDate);
+            var filteredMatches = orderedMatches.Where(w => w.MatchData.FTGoals_1 == orderedMatches.First().MatchData.FTGoals_1
+                                                    && w.MatchData.FTGoals_2 == orderedMatches.First().MatchData.FTGoals_2)
+                                                .OrderBy(o => o.MatchDate);
 
             return new StatsScores
             {
@@ -61,8 +63,8 @@ namespace Futbol.API.Helpers
                 FirstMatch = filteredMatches.First().BuildResults(),
                 LastMatch = filteredMatches.Last().BuildResults(),
                 Count = filteredMatches.Count(),
-                Goals_1 = filteredMatches.First().MatchData.FTGoals_1.Value,
-                Goals_2 = filteredMatches.First().MatchData.FTGoals_2.Value,
+                Goals_1 = filteredMatches.First().MatchData.FTHomeGoals.Value,
+                Goals_2 = filteredMatches.First().MatchData.FTAwayGoals.Value,
             };
         }
 
@@ -88,7 +90,7 @@ namespace Futbol.API.Helpers
                 .GroupBy(i => i.SecondTeamId)
                 .Select(grp => new { Item = grp.Key, Count = grp.Count() })
                 .OrderByDescending(grp => grp.Count)
-                .Take(5)
+                .Take(3)
                 .ToList();
 
             List<StatsTeamMatchups> stats = new List<StatsTeamMatchups>();
@@ -103,7 +105,6 @@ namespace Futbol.API.Helpers
                     Count = group.Count,
                     Team_1 = teamId,
                     Team_2 = secondTeam.SecondTeamId
-                    //AllMatches = new Uri($"")
                 };
 
                 stats.Add(stat);

@@ -10,40 +10,22 @@ namespace Futbol.Importer.Repositories
 {
     public class FutbolRepository : IFutbolRepository
     {
-        /// <summary>
-        /// The context
-        /// </summary>
         private FutbolContext context;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FutbolRepository"/> class.
-        /// </summary>
-        /// <param name="context">The context.</param>
         public FutbolRepository(FutbolContext context)
         {
             this.context = context;
         }
 
-        /// <summary>
-        /// Retrieves the name of the team by.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns>Team by name</returns>
         public Team RetrieveTeamByName(string name)
         {
             return this.context.Team.FirstOrDefault(w => w.TeamName == name || w.AlternateTeamName == name);
         }
 
-        /// <summary>
-        /// Retrieves the team by identifier.
-        /// </summary>
-        /// <param name="teamId">The team identifier.</param>
-        /// <returns></returns>
         public Team RetrieveTeamById(int teamId)
         {
             return this.context.Team.FirstOrDefault(w => w.TeamId == teamId);
         }
-
 
         public void UpdateTeam(Team team)
         {
@@ -51,21 +33,11 @@ namespace Futbol.Importer.Repositories
             this.context.SaveChanges();
         }
 
-        /// <summary>
-        /// Retrieves the season by start year.
-        /// </summary>
-        /// <param name="seasonStartYear">The season start year.</param>
-        /// <returns>Season by year</returns>
         public Season RetrieveSeasonByStartYear(int seasonStartYear)
         {
             return this.context.Season.FirstOrDefault(w => w.SeasonPeriod.StartsWith($"{seasonStartYear.ToString()}/"));
         }
 
-        /// <summary>
-        /// Retrieves the name of the competition by.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns>Competition by name</returns>
         public Competition RetrieveCompetitionByName(string name)
         {
             var competition = this.context.Competition.FirstOrDefault(w => w.CompetitionName == name);
@@ -78,21 +50,12 @@ namespace Futbol.Importer.Repositories
             return this.context.Competition.FirstOrDefault(w => name.StartsWith(w.CompetitionName));
         }
 
-        /// <summary>
-        /// Adds the specified record.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="record">The record.</param>
         public void Add<T>(T record) where T : class
         {
             this.context.Add(record);
             this.context.SaveChanges();
         }
 
-        /// <summary>
-        /// Inserts the matches.
-        /// </summary>
-        /// <param name="records">The records.</param>
         public void InsertMatches(List<Match> records)
         {
             foreach (var record in records)

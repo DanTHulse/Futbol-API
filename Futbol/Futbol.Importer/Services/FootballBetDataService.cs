@@ -11,32 +11,16 @@ namespace Futbol.Importer.Services
 {
     public class FootballBetDataService : IFootballBetDataService
     {
-        /// <summary>
-        /// The football bet data repository
-        /// </summary>
         private readonly IFootballBetDataRepository footballBetDataRepository;
 
-        /// <summary>
-        /// The futbol service
-        /// </summary>
         private readonly IFutbolService futbolService;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FootballBetDataService"/> class.
-        /// </summary>
-        /// <param name="footballDataRepository">The football data repository.</param>
         public FootballBetDataService(IFootballBetDataRepository footballBetDataRepository, IFutbolService futbolService)
         {
             this.footballBetDataRepository = footballBetDataRepository;
             this.futbolService = futbolService;
         }
 
-        /// <summary>
-        /// Imports the bet data.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        /// <param name="competitionName">The name of the competition being imported</param>
-        /// <param name="seasonStart">The start year of the season period</param>
         public void ImportBetData(string fileName, string competitionName, int seasonStart)
         {
             ConsoleLog.Start($"Parsing fixtures: {competitionName} - {seasonStart}");
@@ -56,13 +40,6 @@ namespace Futbol.Importer.Services
                 ConsoleLog.Error($"No fixtures found for file: {fileName}", $"{competitionName} - {seasonStart}");
             }
         }
-
-        /// <summary>
-        /// Maps the records.
-        /// </summary>
-        /// <param name="fixtures">The fixtures.</param>
-        /// <param name="competitionName">Name of the competition.</param>
-        /// <param name="seasonStart">The season start.</param>
         private void MapRecords(List<Fixture> fixtures, string competitionName, int seasonStart)
         {
             var seasonId = this.futbolService.RetrieveSeasonByStartYear(seasonStart).SeasonId;
@@ -101,12 +78,6 @@ namespace Futbol.Importer.Services
             this.futbolService.InsertMatches(matches);
         }
 
-        /// <summary>
-        /// Calculates the result.
-        /// </summary>
-        /// <param name="homeGoals">The home goals.</param>
-        /// <param name="awayGoals">The away goals.</param>
-        /// <returns></returns>
         private string CalculateResult(int? homeGoals, int? awayGoals)
         {
             if (homeGoals == null)
@@ -119,13 +90,6 @@ namespace Futbol.Importer.Services
                 return "D";
         }
 
-        /// <summary>
-        /// Builds the match uid.
-        /// </summary>
-        /// <param name="homeTeam">The home team.</param>
-        /// <param name="awayTeam">The away team.</param>
-        /// <param name="matchDate">The match date.</param>
-        /// <returns></returns>
         private string BuildMatchUid(string homeTeam, string awayTeam, DateTime matchDate)
         {
             var homeTeamTag = homeTeam.Replace(" ", "").Replace(".", "").Left(5).ToUpper();

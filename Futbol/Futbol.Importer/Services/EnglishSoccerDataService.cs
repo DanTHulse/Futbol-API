@@ -21,10 +21,6 @@ namespace Futbol.Importer.Services
             this.futbolService = futbolService;
         }
 
-        /// <summary>
-        /// Imports the bet data.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
         public void ImportData(string fileName)
         {
             ConsoleLog.Start($"Parsing fixtures: ");
@@ -43,12 +39,6 @@ namespace Futbol.Importer.Services
             }
         }
 
-        /// <summary>
-        /// Maps the records.
-        /// </summary>
-        /// <param name="fixtures">The fixtures.</param>
-        /// <param name="competitionName">Name of the competition.</param>
-        /// <param name="seasonStart">The season start.</param>
         private void MapRecords(List<Fixtures> fixtures)
         {
             var allSeasons = fixtures.Select(s => s.Season).Distinct();
@@ -98,12 +88,6 @@ namespace Futbol.Importer.Services
             }
         }
 
-        /// <summary>
-        /// Calculates the result.
-        /// </summary>
-        /// <param name="homeGoals">The home goals.</param>
-        /// <param name="awayGoals">The away goals.</param>
-        /// <returns></returns>
         private string CalculateResult(int? homeGoals, int? awayGoals)
         {
             if (homeGoals == null)
@@ -116,13 +100,6 @@ namespace Futbol.Importer.Services
                 return "D";
         }
 
-        /// <summary>
-        /// Builds the match uid.
-        /// </summary>
-        /// <param name="homeTeam">The home team.</param>
-        /// <param name="awayTeam">The away team.</param>
-        /// <param name="matchDate">The match date.</param>
-        /// <returns></returns>
         private string BuildMatchUid(string homeTeam, string awayTeam, DateTime matchDate)
         {
             var homeTeamTag = homeTeam.Replace(" ", "").Replace(".", "");
