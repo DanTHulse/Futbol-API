@@ -14,7 +14,7 @@ namespace Futbol.API.Helpers
 
         public UrlBuilderService(IConfigurationRoot config)
         {
-            this.ApiUrl = config.GetValue<string>("AppSettings:ApiUrl");
+            this.ApiUrl = config.GetValue<string>("AppSettings:ApiBaseUrl");
             this.FBUrl = $"{this.ApiUrl}/{config.GetValue<string>("AppSettings:FootballApiResource")}";
             this.StatsUrl = $"{this.ApiUrl}/{config.GetValue<string>("AppSettings:StatsApiResource")}";
         }
