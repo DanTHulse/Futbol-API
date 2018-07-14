@@ -24,6 +24,7 @@ namespace Futbol.Common.Models.DataModels
 
         public Uri FixtureStats { get; set; }
 
+        [JsonProperty("MatchDetails")]
         public Uri Reference { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]

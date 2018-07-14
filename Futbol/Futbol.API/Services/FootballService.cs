@@ -82,6 +82,7 @@ namespace Futbol.API.Services
             {
                 SeasonId = season.SeasonId,
                 SeasonPeriod = season.SeasonPeriod,
+                Reference = this.urlService.SeasonReference(season.SeasonId),
                 AllMatches = this.urlService.AllMatchesSeason(season.SeasonId)
             };
         }
@@ -93,6 +94,7 @@ namespace Futbol.API.Services
             {
                 SeasonId = s.SeasonId,
                 SeasonPeriod = s.SeasonPeriod,
+                Reference = this.urlService.SeasonReference(s.SeasonId),
                 AllMatches = this.urlService.AllMatchesSeason(s.SeasonId)
             });
         }
@@ -100,22 +102,49 @@ namespace Futbol.API.Services
         public FootballTeam GetTeamById(int teamId)
         {
             var team = this.futbolRepository.GetById<Team>(teamId);
+            var seasons = this.futbolRepository.GetCompetitionSeasonsByTeam(teamId);
+
+            var groupedSeasons = seasons
+                .GroupBy(grp => new { grp.SeasonId, grp.SeasonPeriod })
+                .Select(s => new
+                {
+                    s.Key,
+                    Value = s.Select(r => new FootballTeamSeasonCompetitions
+                    {
+                        CompetitionName = r.CompetitionName,
+                        MatchCount = r.MatchCount,
+                        Stats = this.urlService.TeamStats(teamId, r.CompetitionId, s.Key.SeasonId),
+                        AllMatches = this.urlService.AllMatchesTeam(teamId, r.CompetitionId, s.Key.SeasonId)
+                    })
+                 });
+
             return new FootballTeam
             {
                 TeamId = team.TeamId,
                 TeamName = team.TeamName,
+                Reference = this.urlService.TeamReference(team.TeamId),
                 Stats = this.urlService.TeamStats(team.TeamId),
-                AllMatches = this.urlService.AllMatchesTeam(team.TeamId)
+                AllMatches = this.urlService.AllMatchesTeam(team.TeamId),
+                CompetitionSeasons = groupedSeasons.Select(s => new FootballTeamSeasons
+                {
+                    SeasonPeriod = s.Key.SeasonPeriod,
+                    MatchCount = s.Value.Sum(x => x.MatchCount),
+                    Competitions = s.Value,
+                    Stats = this.urlService.TeamStats(teamId, null, s.Key.SeasonId),
+                    AllMatches = this.urlService.AllMatchesTeam(teamId, null, s.Key.SeasonId)
+                })
             };
         }
 
         public IEnumerable<FootballTeam> GetTeams()
         {
             var teams = this.futbolRepository.Get<Team>();
+
             return teams.Select(s => new FootballTeam
             {
                 TeamId = s.TeamId,
                 TeamName = s.TeamName,
+                Reference = this.urlService.TeamReference(s.TeamId),
                 Stats = this.urlService.TeamStats(s.TeamId),
                 AllMatches = this.urlService.AllMatchesTeam(s.TeamId)
             });

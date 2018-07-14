@@ -89,6 +89,11 @@ namespace Futbol.Common.Infrastructure
                 entity.Ignore(i => i.AllMatches);
                 entity.Ignore(i => i.Stats);
             });
+
+            modelBuilder.Entity<FootballCompetitionSeasonsTeam_Data>(entity =>
+            {
+                entity.HasKey(k => new { k.SeasonId, k.CompetitionId });
+            });
         }
     }
 }

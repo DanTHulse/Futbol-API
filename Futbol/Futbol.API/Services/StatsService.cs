@@ -148,7 +148,11 @@ namespace Futbol.API.Services
                 {
                     GamesWon = matches.Where(w => w.MatchData.FTResult == "H").Count(),
                     GamesLost = matches.Where(w => w.MatchData.FTResult == "A").Count(),
-                    GamesDrawn = matches.Where(w => w.MatchData.FTResult == "D").Count()
+                    GamesDrawn = matches.Where(w => w.MatchData.FTResult == "D").Count(),
+                    GoalsFor = (matches.Where(w => w.MatchData.FTResult == "H" || w.MatchData.FTResult == "D").Sum(s => s.MatchData.FTGoals_1.Value)
+                              + matches.Where(w => w.MatchData.FTResult == "A").Sum(s => s.MatchData.FTGoals_2.Value)),
+                    GoalsAgainst = (matches.Where(w => w.MatchData.FTResult == "H" || w.MatchData.FTResult == "D").Sum(s => s.MatchData.FTGoals_2.Value)
+                                  + matches.Where(w => w.MatchData.FTResult == "A").Sum(s => s.MatchData.FTGoals_1.Value))
                 },
                 ReverseFixture = this.urlService.FixtureStats(firstMatch.AwayTeamId, firstMatch.HomeTeamId, competitionId, seasonId),
                 AllMatches = this.urlService.AllMatchesTeams(homeTeam, awayTeam, competitionId, seasonId)
@@ -205,7 +209,8 @@ namespace Futbol.API.Services
                 Table = teamRecords.Select(s => new StatsLeagueTable
                 {
                     TeamName = s.TeamName,
-                    TeamStats = this.urlService.TeamStats(s.TeamId)
+                    Reference = this.urlService.TeamReference(s.TeamId),
+                    TeamStats = this.urlService.TeamStats(s.TeamId, competitionId, seasonId)
                 })
             };
 

@@ -75,6 +75,7 @@ namespace Futbol.API.Controllers.V1
         [HttpGet("Competitions/{competitionId:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(204)]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<ActionResult<FootballCompetition>> GetCompetitionById([FromRoute]int competitionId)
         {
             var competition = await Task.Run(() => this.footballService.GetCompetitionById(competitionId));
@@ -113,6 +114,7 @@ namespace Futbol.API.Controllers.V1
         [HttpGet("Seasons/{seasonId:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(204)]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<ActionResult<FootballSeason>> GetSeasonById([FromRoute]int seasonId)
         {
             var season = await Task.Run(() => this.footballService.GetSeasonById(seasonId));
@@ -154,6 +156,7 @@ namespace Futbol.API.Controllers.V1
         [HttpGet("Teams/{teamId:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(204)]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<ActionResult<FootballTeam>> GetTeamById([FromRoute]int teamId)
         {
             var team = await Task.Run(() => this.footballService.GetTeamById(teamId));

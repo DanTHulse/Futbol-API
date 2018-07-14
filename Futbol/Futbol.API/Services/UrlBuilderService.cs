@@ -28,8 +28,8 @@ namespace Futbol.API.Helpers
         public Uri AllMatchesTeams(int firstTeamId, int secondTeamId, int? competitionId, int? seasonId)
             => new Uri($"{this.FBUrl}/Matches?teamId={firstTeamId}&teamId_2={secondTeamId}&competitionId={competitionId}&seasonId={seasonId}");
 
-        public Uri AllMatchesTeam(int teamId)
-            => new Uri($"{this.FBUrl}/Matches?teamId={teamId}");
+        public Uri AllMatchesTeam(int teamId, int? competitionId = null, int? seasonId = null)
+            => new Uri($"{this.FBUrl}/Matches?teamId={teamId}&competitionId={competitionId}&seasonId={seasonId}");
 
         public Uri AllMatchesCompetition(int competitionId)
             => new Uri($"{this.FBUrl}/Matches?competitionId={competitionId}");
@@ -46,8 +46,8 @@ namespace Futbol.API.Helpers
         public Uri FixtureStats(int homeTeamId, int awayTeamId, int? competitionId, int? seasonId)
             => new Uri($"{this.StatsUrl}/Fixtures/{homeTeamId}/{awayTeamId}?competitionId={competitionId}&seasonId={seasonId}");
 
-        public Uri TeamStats(int teamId)
-            => new Uri($"{this.StatsUrl}/Teams/{teamId}");
+        public Uri TeamStats(int teamId, int? competitionId = null, int? seasonId = null)
+            => new Uri($"{this.StatsUrl}/Teams/{teamId}?competitionId={competitionId}&seasonId={seasonId}");
 
         public Uri CompetitionSeasonStats(int competitionId, int seasonId)
             => new Uri($"{this.StatsUrl}/Competitions/{competitionId}/Seasons/{seasonId}");

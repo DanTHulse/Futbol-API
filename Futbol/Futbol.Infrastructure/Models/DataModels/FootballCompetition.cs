@@ -6,6 +6,7 @@ namespace Futbol.Common.Models.DataModels
 {
     public class FootballCompetition
     {
+        [JsonIgnore]
         public int CompetitionId { get; set; }
 
         public string CompetitionName { get; set; }
@@ -14,6 +15,7 @@ namespace Futbol.Common.Models.DataModels
 
         public int? Tier { get; set; }
 
+        [JsonProperty("CompetitionDetails")]
         public Uri Reference { get; set; }
 
         public Uri AllMatches { get; set; }
@@ -24,6 +26,7 @@ namespace Futbol.Common.Models.DataModels
 
     public class FootballCompetitionSeasons
     {
+        [JsonIgnore]
         public int SeasonId { get; set; }
 
         public string SeasonPeriod { get; set; }

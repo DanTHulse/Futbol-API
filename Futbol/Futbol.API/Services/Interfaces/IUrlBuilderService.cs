@@ -14,7 +14,7 @@ namespace Futbol.API.Services.Interfaces
 
         Uri AllMatchesTeams(int firstTeamId, int secondTeamId, int? competitionId, int? seasonId);
 
-        Uri AllMatchesTeam(int teamId);
+        Uri AllMatchesTeam(int teamId, int? competitionId = null, int? seasonId = null);
 
         Uri AllMatchesCompetition(int competitionId);
 
@@ -26,7 +26,7 @@ namespace Futbol.API.Services.Interfaces
 
         Uri FixtureStats(int homeTeamId, int awayTeamId, int? competitionId, int? seasonId);
 
-        Uri TeamStats(int teamId);
+        Uri TeamStats(int teamId, int? competitionId = null, int? seasonId = null);
 
         Uri CompetitionSeasonStats(int competitionId, int seasonId);
 

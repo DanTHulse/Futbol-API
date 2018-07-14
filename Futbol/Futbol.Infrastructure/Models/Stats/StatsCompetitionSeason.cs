@@ -83,6 +83,9 @@ namespace Futbol.Common.Models.Stats
     {
         public string TeamName { get; set; }
 
+        [JsonProperty("TeamDetails")]
+        public Uri Reference { get; set; }
+
         public Uri TeamStats { get; set; }
     }
 
