@@ -33,6 +33,7 @@ namespace Futbol.API.Controllers.V1
         /// <returns>A list of matches based on the provided filters</returns>
         [HttpGet("Matches/")]
         [ProducesResponseType(200)]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<ActionResult<IEnumerable<FootballMatch>>> SearchScores([FromQuery]FootballFilter filter = null)
         {
             if (filter != null && filter.MatchId.HasValue)
