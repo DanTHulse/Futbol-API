@@ -112,5 +112,36 @@ namespace Futbol.API.Helpers
 
             return stats;
         }
+
+        public static IEnumerable<StatsCompetitionSeasonTeams> CalculateTeamRecords(this IEnumerable<Match> matches, IEnumerable<int> teams)
+        {
+            var teamRecords = new List<StatsCompetitionSeasonTeams>();
+
+            foreach (var team in teams)
+            {
+                var goalsScored = (matches.Where(w => ((w.MatchData.FTResult == "H" || w.MatchData.FTResult == "D") && w.HomeTeamId == team)
+                            || (w.MatchData.FTResult == "A" && w.AwayTeamId == team)).Sum(s => s.MatchData.FTGoals_1.Value))
+                                + (matches.Where(w => (w.MatchData.FTResult == "H" && w.AwayTeamId == team)
+                            || (w.MatchData.FTResult == "A" && w.HomeTeamId == team)).Sum(s => s.MatchData.FTGoals_2.Value));
+
+                var goalsConceded = (matches.Where(w => ((w.MatchData.FTResult == "H" || w.MatchData.FTResult == "D") && w.AwayTeamId == team)
+                            || (w.MatchData.FTResult == "A" && w.HomeTeamId == team)).Sum(s => s.MatchData.FTGoals_1.Value))
+                                  + (matches.Where(w => (w.MatchData.FTResult == "H" && w.HomeTeamId == team)
+                            || (w.MatchData.FTResult == "A" && w.AwayTeamId == team)).Sum(s => s.MatchData.FTGoals_2.Value));
+
+                teamRecords.Add(new StatsCompetitionSeasonTeams
+                {
+                    TeamName = matches.FirstOrDefault(f => f.HomeTeamId == team).HomeTeam.TeamName,
+                    TeamId = team,
+                    GoalsScored = goalsScored,
+                    GoalsConceded = goalsConceded,
+                    GamesWon = matches.SplitMatchesByResult(team, Result.Win).all.Count(),
+                    GamesLost = matches.SplitMatchesByResult(team, Result.Loss).all.Count(),
+                    GamesDrawn = matches.SplitMatchesByResult(team, Result.Draw).all.Count()
+                });
+            }
+
+            return teamRecords;
+        }
     }
 }

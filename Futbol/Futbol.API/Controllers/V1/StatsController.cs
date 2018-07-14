@@ -97,5 +97,20 @@ namespace Futbol.API.Controllers.V1
 
             return this.Ok(stats);
         }
+
+        /// <summary>
+        /// Retrieves the competition season stats.
+        /// </summary>
+        /// <param name="competitionId">The competition identifier.</param>
+        /// <param name="seasonId">The season identifier.</param>
+        /// <returns>Stats based around the competition and season as a whole</returns>
+        [HttpGet("Competitions/{competitionId}/Seasons/{seasonId}")]
+        [ProducesResponseType(200)]
+        public async Task<ActionResult<StatsCompetitionSeason>> RetrieveCompetitionSeasonStats([FromRoute]int competitionId, [FromRoute]int seasonId)
+        {
+            var stats = await Task.Run(() => this.statsService.RetrieveCompetitionSeason(competitionId, seasonId));
+
+            return this.Ok(stats);
+        }
     }
 }

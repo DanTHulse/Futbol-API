@@ -30,19 +30,17 @@ namespace Futbol.API.Controllers.V1
         /// Search for football match data.
         /// </summary>
         /// <param name="filter">The match filters</param>
-        /// <param name="page">The page number</param>
-        /// <param name="pageSize">The page size</param>
         /// <returns>A list of matches based on the provided filters</returns>
         [HttpGet("Matches/")]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<IEnumerable<FootballMatch>>> SearchScores([FromQuery]FootballFilter filter = null, [FromQuery]int page = 1, [FromQuery]int pageSize = 100)
+        public async Task<ActionResult<IEnumerable<FootballMatch>>> SearchScores([FromQuery]FootballFilter filter = null)
         {
             if (filter != null && filter.MatchId.HasValue)
             {
-                return this.Ok(await this.footballService.GetMatchById(filter.MatchId.Value));
+                return this.Ok(await Task.Run(() => this.footballService.GetMatchById(filter.MatchId.Value)));
             }
 
-            var matches = await this.footballService.GetMatches(filter, page, pageSize);
+            var matches = await Task.Run(() => this.footballService.GetMatches(filter));
 
             return this.Ok(matches);
         }
@@ -56,13 +54,13 @@ namespace Futbol.API.Controllers.V1
         [ProducesResponseType(200)]
         public async Task<ActionResult<IEnumerable<FootballCompetition>>> GetCompetitions([FromQuery]string competitionName = null)
         {
-            var competitions = await this.footballService.GetCompetitions();
+            var competitions = await Task.Run(() => this.footballService.GetCompetitions());
 
             if (!string.IsNullOrEmpty(competitionName) && (!competitionName.Contains("*") && !competitionName.Contains("?")))
                 competitionName = "*" + competitionName + "*";
 
             var results = competitions
-                .Where(w => string.IsNullOrEmpty(competitionName) || w.CompetitionName.MatchWildcardString(competitionName))
+                .Where(w => string.IsNullOrEmpty(competitionName) || w.CompetitionName.ToLowerInvariant().MatchWildcardString(competitionName.ToLowerInvariant()))
                 .OrderBy(o => o.CompetitionName);
 
             return this.Ok(results);
@@ -78,7 +76,7 @@ namespace Futbol.API.Controllers.V1
         [ProducesResponseType(204)]
         public async Task<ActionResult<FootballCompetition>> GetCompetitionById([FromRoute]int competitionId)
         {
-            var competition = await this.footballService.GetCompetitionById(competitionId);
+            var competition = await Task.Run(() => this.footballService.GetCompetitionById(competitionId));
 
             if (competition == null)
             {
@@ -97,7 +95,7 @@ namespace Futbol.API.Controllers.V1
         [ProducesResponseType(200)]
         public async Task<ActionResult<IEnumerable<FootballSeason>>> GetSeasons([FromQuery]int? seasonYear = null)
         {
-            var seasons = await this.footballService.GetSeasons();
+            var seasons = await Task.Run(() => this.footballService.GetSeasons());
 
             var results = seasons
                 .Where(w => !seasonYear.HasValue || w.SeasonPeriod.Contains(seasonYear.ToString()))
@@ -116,7 +114,7 @@ namespace Futbol.API.Controllers.V1
         [ProducesResponseType(204)]
         public async Task<ActionResult<FootballSeason>> GetSeasonById([FromRoute]int seasonId)
         {
-            var season = await this.footballService.GetSeasonById(seasonId);
+            var season = await Task.Run(() => this.footballService.GetSeasonById(seasonId));
 
             if (season == null)
             {
@@ -135,13 +133,13 @@ namespace Futbol.API.Controllers.V1
         [ProducesResponseType(200)]
         public async Task<ActionResult<IEnumerable<FootballTeam>>> GetTeams([FromQuery]string teamName = null)
         {
-            var teams = await this.footballService.GetTeams();
+            var teams = await Task.Run(() => this.footballService.GetTeams());
 
             if (!string.IsNullOrEmpty(teamName) && (!teamName.Contains("*") && !teamName.Contains("?")))
                 teamName = "*" + teamName + "*";
 
             var results = teams
-                .Where(w => string.IsNullOrEmpty(teamName) || w.TeamName.MatchWildcardString(teamName))
+                .Where(w => string.IsNullOrEmpty(teamName) || w.TeamName.ToLowerInvariant().MatchWildcardString(teamName.ToLowerInvariant()))
                 .OrderBy(o => o.TeamName);
 
             return this.Ok(results);
@@ -157,7 +155,7 @@ namespace Futbol.API.Controllers.V1
         [ProducesResponseType(204)]
         public async Task<ActionResult<FootballTeam>> GetTeamById([FromRoute]int teamId)
         {
-            var team = await this.footballService.GetTeamById(teamId);
+            var team = await Task.Run(() => this.footballService.GetTeamById(teamId));
 
             if (team == null)
             {

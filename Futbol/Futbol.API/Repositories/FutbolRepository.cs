@@ -2,6 +2,7 @@
 using System.Linq;
 using Futbol.API.Repositories.Interfaces;
 using Futbol.Common.Infrastructure;
+using Futbol.Common.Models.DataModels;
 using Futbol.Common.Models.Football;
 using Futbol.Common.Models.Stats;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,37 @@ namespace Futbol.API.Repositories
         public FutbolRepository(FutbolContext futbolContext)
         {
             this.futbolContext = futbolContext;
+        }
+
+        #region Retrieve Matches
+
+        public IEnumerable<Match> RetrieveMatches(FootballFilter filter)
+        {
+            var matches = this.futbolContext.Match
+                .Include(i => i.MatchData)
+                .Include(i => i.HomeTeam)
+                .Include(i => i.AwayTeam)
+                .Include(i => i.Competition)
+                .Include(i => i.Season)
+                .Where(w => (!filter.CompetitionId.HasValue || filter.CompetitionId.Value == w.CompetitionId)
+                         && (!filter.SeasonId.HasValue || filter.SeasonId.Value == w.SeasonId)
+                         && (!filter.TeamId.HasValue || ((filter.TeamId == w.HomeTeamId && (!filter.TeamId_2.HasValue || filter.TeamId_2 == w.AwayTeamId))
+                                                     || (filter.TeamId == w.AwayTeamId && (!filter.TeamId_2.HasValue || filter.TeamId_2 == w.HomeTeamId))))
+                         && (!filter.HomeTeamId.HasValue || w.HomeTeamId == filter.HomeTeamId.Value)
+                         && (!filter.AwayTeamId.HasValue || w.AwayTeamId == filter.AwayTeamId.Value)
+                         && (!filter.BoxScoreFirst.HasValue
+                                || (w.MatchData.FTHomeGoals == filter.BoxScoreFirst.Value
+                                    && w.MatchData.FTAwayGoals == filter.BoxScoreSecond.Value)
+                                || (w.MatchData.FTAwayGoals == filter.BoxScoreFirst.Value
+                                    && w.MatchData.FTHomeGoals == filter.BoxScoreSecond.Value))
+                         && (!filter.HalftimeBoxScoreFirst.HasValue
+                                || (w.MatchData.HTHomeGoals == filter.HalftimeBoxScoreFirst.Value
+                                    && w.MatchData.HTAwayGoals == filter.HalftimeBoxScoreSecond.Value)
+                                || (w.MatchData.HTAwayGoals == filter.HalftimeBoxScoreFirst.Value
+                                    && w.MatchData.HTHomeGoals == filter.HalftimeBoxScoreSecond.Value)))
+                 .OrderBy(o => o.MatchDate).ToList();
+
+            return matches;
         }
 
         public IEnumerable<Match> RetrieveMatchesByScore(int firstBoxScore, int secondBoxScore, int? competitionId, int? seasonId, bool fullTime)
@@ -77,6 +109,26 @@ namespace Futbol.API.Repositories
             return matches.OrderBy(o => o.MatchDate).ToList();
         }
 
+        #endregion
+
+        public Match RetrieveMatchById(int Id)
+        {
+            return this.futbolContext.Match
+                .Include(i => i.MatchData)
+                .Include(i => i.HomeTeam)
+                .Include(i => i.AwayTeam)
+                .Include(i => i.Competition)
+                .Include(i => i.Season)
+                .Where(w => w.MatchId == Id).FirstOrDefault();
+        }
+
+        public IEnumerable<FootballCompetitionSeasons> GetCompetitionSeasons(int competitionId)
+        {
+            var seasons = this.futbolContext.Set<FootballCompetitionSeasons>().FromSql("football.RetrieveCompetitionSeasons @competitionId = {0}", competitionId).ToList();
+
+            return seasons;
+        }
+
         public IEnumerable<MatchData> RetrieveMatchData(int? competitionId, int? seasonId, bool fullTime)
         {
             var matchData = this.futbolContext.MatchData
@@ -97,6 +149,20 @@ namespace Futbol.API.Repositories
             var data = this.futbolContext.Set<ScorigamiScores>().FromSql("football.RetrieveScorigami @CompetitionId = {0}, @SeasonId = {1}", competitionId, seasonId).ToList();
 
             return data;
+        }
+
+        public T GetById<T>(int Id) where T : class
+        {
+            var record = this.futbolContext.Set<T>().Find(Id);
+
+            return record;
+        }
+
+        public IEnumerable<T> Get<T>() where T : class
+        {
+            var records = this.futbolContext.Set<T>().ToList();
+
+            return records;
         }
     }
 }

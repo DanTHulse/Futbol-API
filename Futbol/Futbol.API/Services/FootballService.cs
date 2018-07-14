@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Futbol.API.Repositories.Interfaces;
 using Futbol.API.Services.Interfaces;
 using Futbol.Common.Models.DataModels;
@@ -10,29 +9,27 @@ namespace Futbol.API.Services
 {
     public class FootballService : IFootballService
     {
-        private readonly IFootballRepository footballRepository;
+        private readonly IFutbolRepository futbolRepository;
 
         private readonly IUrlBuilderService urlService;
 
-        public FootballService(IFootballRepository footballRepository, IUrlBuilderService urlService)
+        public FootballService(IFutbolRepository futbolRepository, IUrlBuilderService urlService)
         {
-            this.footballRepository = footballRepository;
+            this.futbolRepository = futbolRepository;
             this.urlService = urlService;
         }
 
-        public async Task<IEnumerable<FootballMatch>> GetMatches(FootballFilter filter, int page, int pageSize)
+        public IEnumerable<FootballMatch> GetMatches(FootballFilter filter)
         {
-            var matchData = await this.footballRepository.GetMatches(filter, page, pageSize);
+            var matchData = this.futbolRepository.RetrieveMatches(filter);
             var mappedMatches = this.MapMatches(matchData);
-
-            //var result = mappedMatches.BuildPageHeader(page, pageSize);
 
             return mappedMatches;
         }
 
-        public async Task<IEnumerable<FootballMatch>> GetMatchById(int matchId)
+        public IEnumerable<FootballMatch> GetMatchById(int matchId)
         {
-            var match = await this.footballRepository.GetMatchById(matchId);
+            var match = this.futbolRepository.RetrieveMatchById(matchId);
 
             if (match == null || match.MatchId == 0)
             {
@@ -42,10 +39,10 @@ namespace Futbol.API.Services
             return new List<FootballMatch> { this.MapMatchData(match) };
         }
 
-        public async Task<FootballCompetition> GetCompetitionById(int competitionId)
+        public FootballCompetition GetCompetitionById(int competitionId)
         {
-            var competition = await this.footballRepository.GetById<Competition>(competitionId);
-            var seasons = await this.footballRepository.GetCompetitionSeasons(competitionId);
+            var competition = this.futbolRepository.GetById<Competition>(competitionId);
+            var seasons = this.futbolRepository.GetCompetitionSeasons(competitionId);
 
             return new FootballCompetition
             {
@@ -64,9 +61,9 @@ namespace Futbol.API.Services
             };
         }
 
-        public async Task<IEnumerable<FootballCompetition>> GetCompetitions()
+        public IEnumerable<FootballCompetition> GetCompetitions()
         {
-            var competitions = await this.footballRepository.Get<Competition>();
+            var competitions = this.futbolRepository.Get<Competition>();
             return competitions.Select(s => new FootballCompetition
             {
                 CompetitionId = s.CompetitionId,
@@ -78,9 +75,9 @@ namespace Futbol.API.Services
             });
         }
 
-        public async Task<FootballSeason> GetSeasonById(int seasonId)
+        public FootballSeason GetSeasonById(int seasonId)
         {
-            var season = await this.footballRepository.GetById<Season>(seasonId);
+            var season = this.futbolRepository.GetById<Season>(seasonId);
             return new FootballSeason
             {
                 SeasonId = season.SeasonId,
@@ -89,9 +86,9 @@ namespace Futbol.API.Services
             };
         }
 
-        public async Task<IEnumerable<FootballSeason>> GetSeasons()
+        public IEnumerable<FootballSeason> GetSeasons()
         {
-            var seasons = await this.footballRepository.Get<Season>();
+            var seasons = this.futbolRepository.Get<Season>();
             return seasons.Select(s => new FootballSeason
             {
                 SeasonId = s.SeasonId,
@@ -100,9 +97,9 @@ namespace Futbol.API.Services
             });
         }
 
-        public async Task<FootballTeam> GetTeamById(int teamId)
+        public FootballTeam GetTeamById(int teamId)
         {
-            var team = await this.footballRepository.GetById<Team>(teamId);
+            var team = this.futbolRepository.GetById<Team>(teamId);
             return new FootballTeam
             {
                 TeamId = team.TeamId,
@@ -112,9 +109,9 @@ namespace Futbol.API.Services
             };
         }
 
-        public async Task<IEnumerable<FootballTeam>> GetTeams()
+        public IEnumerable<FootballTeam> GetTeams()
         {
-            var teams = await this.footballRepository.Get<Team>();
+            var teams = this.futbolRepository.Get<Team>();
             return teams.Select(s => new FootballTeam
             {
                 TeamId = s.TeamId,

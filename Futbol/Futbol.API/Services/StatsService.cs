@@ -2,6 +2,7 @@
 using Futbol.API.Helpers;
 using Futbol.API.Repositories.Interfaces;
 using Futbol.API.Services.Interfaces;
+using Futbol.Common.Models.DataModels;
 using Futbol.Common.Models.Enumerations;
 using Futbol.Common.Models.Stats;
 using Microsoft.Extensions.Configuration;
@@ -158,5 +159,62 @@ namespace Futbol.API.Services
 
             return fixtureStats;
         }
+
+        public StatsCompetitionSeason RetrieveCompetitionSeason(int competitionId, int seasonId)
+        {
+            var matches = this.futbolRepository.RetrieveMatches(new FootballFilter { CompetitionId = competitionId, SeasonId = seasonId});
+
+            if (matches == null || !matches.Any())
+            {
+                return null;
+            }
+
+            var allTeams = matches.Select(s => s.HomeTeamId).ToList();
+            allTeams.AddRange(matches.Select(s => s.AwayTeamId).ToList());
+
+            var distinctTeams = allTeams.Distinct();
+
+            var teamRecords = matches.CalculateTeamRecords(distinctTeams);
+
+            var goalsScored = teamRecords.OrderBy(o => o.GoalsScored);
+            var goalsConceded = teamRecords.OrderBy(o => o.GoalsConceded);
+            var gamesWon = teamRecords.OrderByDescending(o => o.GamesWon).First();
+            var gamesLost = teamRecords.OrderByDescending(o => o.GamesLost).First();
+            var gamesDrawn = teamRecords.OrderByDescending(o => o.GamesDrawn).First();
+
+            var stats = new StatsCompetitionSeason
+            {
+                BiggestWin = matches.Where(w => w.MatchData.FTResult == "H" || w.MatchData.FTResult == "A").CalculateBiggestResult(),
+                BiggestDraw = matches.Where(w => w.MatchData.FTResult == "D").CalculateBiggestResult(),
+                TotalGamesPlayed = matches.Count(),
+                TotalGoalsScored = matches.Sum(s => (s.MatchData.FTGoals_1.Value + s.MatchData.FTGoals_2.Value)),
+                MostGoalsScoredTeam = goalsScored.Last().TeamName,
+                MostGoalsScoredAmount = goalsScored.Last().GoalsScored,
+                LeastGoalsScoredTeam = goalsScored.First().TeamName,
+                LeastGoalsScoredAmount = goalsScored.First().GoalsScored,
+                MostGoalsConcededTeam = goalsConceded.Last().TeamName,
+                MostGoalsConcededAmount = goalsConceded.Last().GoalsConceded,
+                LeastGoalsConcededTeam = goalsConceded.First().TeamName,
+                LeastGoalsConcededAmount = goalsConceded.First().GoalsConceded,
+                MostGamesWonTeam = gamesWon.TeamName,
+                MostGamesWonAmount = gamesWon.GamesWon,
+                MostGamesLostTeam = gamesLost.TeamName,
+                MostGamesLostAmount = gamesLost.GamesLost,
+                MostGamesDrawnTeam = gamesDrawn.TeamName,
+                MostGamesDrawnAmount = gamesDrawn.GamesDrawn,
+                Table = teamRecords.Select(s => new StatsLeagueTable
+                {
+                    TeamName = s.TeamName,
+                    TeamStats = this.urlService.TeamStats(s.TeamId)
+                })
+            };
+
+            stats.BiggestWin.FirstMatch.MatchData = this.urlService.MatchReference(stats.BiggestWin.FirstMatch.MatchId);
+            stats.BiggestWin.LastMatch.MatchData = this.urlService.MatchReference(stats.BiggestWin.LastMatch.MatchId);
+            stats.BiggestDraw.FirstMatch.MatchData = this.urlService.MatchReference(stats.BiggestDraw.FirstMatch.MatchId);
+            stats.BiggestDraw.LastMatch.MatchData = this.urlService.MatchReference(stats.BiggestDraw.LastMatch.MatchId);
+
+            return stats;
+        } 
     }
 }

@@ -47,7 +47,7 @@ namespace Futbol.API.Helpers
             => new Uri($"{this.StatsUrl}/Fixtures/{homeTeamId}/{awayTeamId}?competitionId={competitionId}&seasonId={seasonId}");
 
         public Uri TeamStats(int teamId)
-            => new Uri($"{this.StatsUrl}/Teams?teamId={teamId}");
+            => new Uri($"{this.StatsUrl}/Teams/{teamId}");
 
         public Uri CompetitionSeasonStats(int competitionId, int seasonId)
             => new Uri($"{this.StatsUrl}/Competitions/{competitionId}/Seasons/{seasonId}");
