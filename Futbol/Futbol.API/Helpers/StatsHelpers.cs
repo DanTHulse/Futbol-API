@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Futbol.API.DataModels.Enumerations;
-using Futbol.API.DataModels.Stats;
+using Futbol.Common.Models.Enumerations;
 using Futbol.Common.Models.Football;
+using Futbol.Common.Models.Stats;
 
 namespace Futbol.API.Helpers
 {

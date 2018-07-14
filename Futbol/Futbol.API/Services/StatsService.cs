@@ -1,9 +1,9 @@
 ﻿using System.Linq;
-using Futbol.API.DataModels.Enumerations;
-using Futbol.API.DataModels.Stats;
 using Futbol.API.Helpers;
 using Futbol.API.Repositories.Interfaces;
 using Futbol.API.Services.Interfaces;
+using Futbol.Common.Models.Enumerations;
+using Futbol.Common.Models.Stats;
 using Microsoft.Extensions.Configuration;
 
 namespace Futbol.API.Services
@@ -41,8 +41,8 @@ namespace Futbol.API.Services
                 AllMatches = this.urlService.AllMatchesForScoreline(firstBoxScore, secondBoxScore, competitionId, seasonId)
             };
 
-            scoreStats.FirstMatch.MatchData = this.urlService.MatchData(scoreStats.FirstMatch.MatchId);
-            scoreStats.LastMatch.MatchData = this.urlService.MatchData(scoreStats.LastMatch.MatchId);
+            scoreStats.FirstMatch.MatchData = this.urlService.MatchReference(scoreStats.FirstMatch.MatchId);
+            scoreStats.LastMatch.MatchData = this.urlService.MatchReference(scoreStats.LastMatch.MatchId);
 
             return scoreStats;
         }
@@ -109,14 +109,14 @@ namespace Futbol.API.Services
                 MostDrawsAgainst = draws.all.CalculateMostPlayed(team.TeamId)
             };
 
-            teamStats.BiggestWin.FirstMatch.MatchData = this.urlService.MatchData(teamStats.BiggestWin.FirstMatch.MatchId);
-            teamStats.BiggestWin.LastMatch.MatchData = this.urlService.MatchData(teamStats.BiggestWin.LastMatch.MatchId);
+            teamStats.BiggestWin.FirstMatch.MatchData = this.urlService.MatchReference(teamStats.BiggestWin.FirstMatch.MatchId);
+            teamStats.BiggestWin.LastMatch.MatchData = this.urlService.MatchReference(teamStats.BiggestWin.LastMatch.MatchId);
 
-            teamStats.BiggestLoss.FirstMatch.MatchData = this.urlService.MatchData(teamStats.BiggestLoss.FirstMatch.MatchId);
-            teamStats.BiggestLoss.LastMatch.MatchData = this.urlService.MatchData(teamStats.BiggestLoss.LastMatch.MatchId);
+            teamStats.BiggestLoss.FirstMatch.MatchData = this.urlService.MatchReference(teamStats.BiggestLoss.FirstMatch.MatchId);
+            teamStats.BiggestLoss.LastMatch.MatchData = this.urlService.MatchReference(teamStats.BiggestLoss.LastMatch.MatchId);
 
-            teamStats.BiggestDraw.FirstMatch.MatchData = this.urlService.MatchData(teamStats.BiggestDraw.FirstMatch.MatchId);
-            teamStats.BiggestDraw.LastMatch.MatchData = this.urlService.MatchData(teamStats.BiggestDraw.LastMatch.MatchId);
+            teamStats.BiggestDraw.FirstMatch.MatchData = this.urlService.MatchReference(teamStats.BiggestDraw.FirstMatch.MatchId);
+            teamStats.BiggestDraw.LastMatch.MatchData = this.urlService.MatchReference(teamStats.BiggestDraw.LastMatch.MatchId);
 
             teamStats.MostGamesPlayedAgainst.Select(s => { s.AllMatches = this.urlService.AllMatchesTeams(s.Team_1, s.Team_2, competitionId, seasonId); return s; }).ToList();
             teamStats.MostWinsAgainst.Select(s => { s.AllMatches = this.urlService.AllMatchesTeams(s.Team_1, s.Team_2, competitionId, seasonId); return s; }).ToList();
@@ -153,8 +153,8 @@ namespace Futbol.API.Services
                 AllMatches = this.urlService.AllMatchesTeams(homeTeam, awayTeam, competitionId, seasonId)
             };
 
-            fixtureStats.FirstResult.MatchData = this.urlService.MatchData(fixtureStats.FirstResult.MatchId);
-            fixtureStats.LastResults.Select(s => { s.MatchData = this.urlService.MatchData(s.MatchId); return s; }).ToList();
+            fixtureStats.FirstResult.MatchData = this.urlService.MatchReference(fixtureStats.FirstResult.MatchId);
+            fixtureStats.LastResults.Select(s => { s.MatchData = this.urlService.MatchReference(s.MatchId); return s; }).ToList();
 
             return fixtureStats;
         }

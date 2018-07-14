@@ -1,11 +1,8 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace Futbol.API.DataModels.Stats
+namespace Futbol.Common.Models.Stats
 {
-    /// <summary>
-    /// Stats for matches
-    /// </summary>
     public class StatsMatch
     {
         public string HomeTeam { get; set; }

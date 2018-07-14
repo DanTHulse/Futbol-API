@@ -15,6 +15,8 @@ namespace Futbol.Common.Models.Football
 
         public string Country { get; set; }
 
+        public int? Tier { get; set; }
+
         public ICollection<Match> Matches { get; set; }
     }
 }

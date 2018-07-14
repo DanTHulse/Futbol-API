@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Futbol.API.DataModels;
 using Futbol.API.Repositories.Interfaces;
 using Futbol.Common.Infrastructure;
+using Futbol.Common.Models.DataModels;
 using Futbol.Common.Models.Football;
 using Microsoft.EntityFrameworkCore;
 
@@ -56,6 +56,13 @@ namespace Futbol.API.Repositories
                 .Include(i => i.Competition)
                 .Include(i => i.Season)
                 .Where(w => w.MatchId == Id).FirstOrDefault());
+        }
+
+        public async Task<IEnumerable<FootballCompetitionSeasons>> GetCompetitionSeasons(int competitionId)
+        {
+            var seasons = await this.futbolContext.Set<FootballCompetitionSeasons>().FromSql("football.RetrieveCompetitionSeasons @competitionId = {0}", competitionId).ToListAsync();
+
+            return seasons;
         }
 
         public async Task<T> GetById<T>(int Id) where T : class

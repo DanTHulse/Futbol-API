@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Futbol.API.DataModels;
+using Futbol.Common.Models.DataModels;
 
 namespace Futbol.API.Services.Interfaces
 {

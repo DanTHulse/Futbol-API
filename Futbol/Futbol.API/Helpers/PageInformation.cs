@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Futbol.API.DataModels;
+using Futbol.Common.Models.DataModels;
 
 namespace Futbol.API.Helpers
 {

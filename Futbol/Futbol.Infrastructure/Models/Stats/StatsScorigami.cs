@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Futbol.Common.Models.Stats;
 
-namespace Futbol.API.DataModels.Stats
+namespace Futbol.Common.Models.Stats
 {
     /// <summary>
     /// Scorigami stats

@@ -1,4 +1,4 @@
-﻿namespace Futbol.API.DataModels.Enumerations
+﻿namespace Futbol.Common.Models.Enumerations
 {
     public enum Result
     {

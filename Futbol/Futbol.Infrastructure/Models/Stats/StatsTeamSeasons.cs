@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Futbol.API.DataModels.Stats
+namespace Futbol.Common.Models.Stats
 {
     public class StatsTeamSeasons
     {

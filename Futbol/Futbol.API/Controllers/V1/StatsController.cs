@@ -1,12 +1,13 @@
 ﻿using System.Threading.Tasks;
-using Futbol.API.DataModels.Stats;
 using Futbol.API.Services.Interfaces;
+using Futbol.Common.Models.Stats;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Futbol.API.Controllers.V1
 {
+    [ApiController]
     [Route("api/v1/Stats")]
-    public class StatsController : Controller
+    public class StatsController : ControllerBase
     {
         /// <summary>
         /// The stats service
@@ -29,10 +30,9 @@ namespace Futbol.API.Controllers.V1
         /// <param name="seasonId">The season identifier.</param>
         /// <param name="fullTime">if set to <c>true</c> [full time].</param>
         /// <returns>Scorigami</returns>
-        [Route("Scorigami/")]
-        [HttpGet]
-        [Produces(typeof(StatsScorigami))]
-        public async Task<IActionResult> RetrieveScorigami(
+        [HttpGet("Scorigami/")]
+        [ProducesResponseType(200)]
+        public async Task<ActionResult<StatsScorigami>> RetrieveScorigami(
             [FromQuery]int? competitionId = null,
             [FromQuery]int? seasonId = null,
             [FromQuery]bool fullTime = true)
@@ -51,10 +51,9 @@ namespace Futbol.API.Controllers.V1
         /// <param name="seasonId">The season identifier.</param>
         /// <param name="fullTime">if set to <c>true</c> [full time].</param>
         /// <returns>Stats based around the provided box score</returns>
-        [Route("Scores/{firstBoxScore}/{secondBoxScore}")]
-        [HttpGet]
-        [Produces(typeof(StatsScores))]
-        public async Task<IActionResult> RetrieveScoreStats(
+        [HttpGet("Scores/{firstBoxScore}/{secondBoxScore}")]
+        [ProducesResponseType(200)]
+        public async Task<ActionResult<StatsScores>> RetrieveScoreStats(
             [FromRoute]int firstBoxScore,
             [FromRoute]int secondBoxScore,
             [FromQuery]int? competitionId = null,
@@ -73,10 +72,9 @@ namespace Futbol.API.Controllers.V1
         /// <param name="competitionId">The competition identifier.</param>
         /// <param name="seasonId">The season identifier.</param>
         /// <returns>Stats based around the provided team</returns>
-        [Route("Teams/{teamId}")]
-        [HttpGet]
-        [Produces(typeof(StatsTeam))]
-        public async Task<IActionResult> RetrieveTeamStats([FromRoute]int teamId, [FromQuery]int? competitionId = null, [FromQuery]int? seasonId = null)
+        [HttpGet("Teams/{teamId}")]
+        [ProducesResponseType(200)]
+        public async Task<ActionResult<StatsTeam>> RetrieveTeamStats([FromRoute]int teamId, [FromQuery]int? competitionId = null, [FromQuery]int? seasonId = null)
         {
             var stats = await Task.Run(() => this.statsService.RetrieveTeamStats(teamId, competitionId, seasonId));
 
@@ -91,10 +89,9 @@ namespace Futbol.API.Controllers.V1
         /// <param name="competitionId">The competition identifier.</param>
         /// <param name="seasonId">The season identifier.</param>
         /// <returns>Stats based around the provided fixture between two teams</returns>
-        [Route("Fixtures/{homeTeam}/{awayTeam}")]
-        [HttpGet]
-        [Produces(typeof(StatsFixtures))]
-        public async Task<IActionResult> RetrieveFixtureStats([FromRoute]int homeTeam, [FromRoute]int awayTeam, [FromQuery]int? competitionId = null, [FromQuery]int? seasonId = null)
+        [HttpGet("Fixtures/{homeTeam}/{awayTeam}")]
+        [ProducesResponseType(200)]
+        public async Task<ActionResult<StatsFixtures>> RetrieveFixtureStats([FromRoute]int homeTeam, [FromRoute]int awayTeam, [FromQuery]int? competitionId = null, [FromQuery]int? seasonId = null)
         {
             var stats = await Task.Run(() => this.statsService.RetrieveFixturesStats(homeTeam, awayTeam, competitionId, seasonId));
 

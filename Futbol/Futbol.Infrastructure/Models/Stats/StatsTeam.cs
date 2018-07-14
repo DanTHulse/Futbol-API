@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Futbol.API.DataModels.Stats
+namespace Futbol.Common.Models.Stats
 {
     public class StatsTeam
     {

@@ -1,11 +1,8 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace Futbol.API.DataModels.Stats
+namespace Futbol.Common.Models.Stats
 {
-    /// <summary>
-    /// The stats for a chosen scoreline
-    /// </summary>
     public class StatsScores
     {
         public string BoxScore { get; set; }

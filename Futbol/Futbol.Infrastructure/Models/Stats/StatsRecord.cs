@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Futbol.API.DataModels.Stats
+namespace Futbol.Common.Models.Stats
 {
     public class StatsRecord
     {

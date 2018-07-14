@@ -1,4 +1,5 @@
-﻿using Futbol.Common.Models.Football;
+﻿using Futbol.Common.Models.DataModels;
+using Futbol.Common.Models.Football;
 using Futbol.Common.Models.Stats;
 using Microsoft.EntityFrameworkCore;
 
@@ -80,6 +81,13 @@ namespace Futbol.Common.Infrastructure
                 entity.HasKey(k => new { k.Score_1, k.Score_2 });
                 entity.Ignore(i => i.BoxScore);
                 entity.Ignore(i => i.ScoreStats);
+            });
+
+            modelBuilder.Entity<FootballCompetitionSeasons>(entity =>
+            {
+                entity.HasKey(k => k.SeasonId);
+                entity.Ignore(i => i.AllMatches);
+                entity.Ignore(i => i.Stats);
             });
         }
     }

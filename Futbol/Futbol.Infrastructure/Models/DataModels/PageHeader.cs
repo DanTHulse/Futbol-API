@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Futbol.API.DataModels
+namespace Futbol.Common.Models.DataModels
 {
     public class PageHeader<T>
     {
