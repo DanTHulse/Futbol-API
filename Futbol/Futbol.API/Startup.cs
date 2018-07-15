@@ -37,7 +37,23 @@ namespace Futbol.API
             services.AddSwaggerGen(c =>
             {
                 c.DescribeAllEnumsAsStrings();
-                c.SwaggerDoc("v1", new Info { Title = "Futbol API", Version = "v1" });
+                c.SwaggerDoc("v1", new Info
+                {
+                    Title = "Futbol API",
+                    Version = "v1",
+                    Contact = new Contact
+                    {
+                        Name = "Dan Hulse",
+                        Email = "dannythulse@gmail.com",
+                        Url = "https://danielhulse.net/"
+                    },
+                    License = new License
+                    {
+                        Name = "GNU AGPL v3.0",
+                        Url = "https://www.gnu.org/licenses/agpl.txt"
+                    },
+                    Description = "An API that allows access to a large amount of football match results and related data dating from 1871" 
+                });
                 c.IncludeXmlComments($"{basePath}\\Futbol.API.xml");
             });
 
