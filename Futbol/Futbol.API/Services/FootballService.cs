@@ -61,7 +61,7 @@ namespace Futbol.API.Services
                         {
                             SeasonDetails = this.urlService.SeasonReference(s.SeasonId),
                             AllMatches = this.urlService.AllMatchesCompetitionSeason(competition.CompetitionId, s.SeasonId),
-                            SeasonStats = this.urlService.CompetitionSeasonStats(competition.CompetitionId, s.SeasonId)
+                            CompetitionStats = this.urlService.CompetitionSeasonStats(competition.CompetitionId, s.SeasonId)
                         };
                         return s;
                     })

@@ -111,19 +111,26 @@ namespace Futbol.API.Services
                 MostDrawsAgainst = draws.all.CalculateMostPlayed(team.TeamId)
             };
 
-            teamStats.BiggestWin.FirstMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(teamStats.BiggestWin.FirstMatch.MatchId) };
-            teamStats.BiggestWin.LastMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(teamStats.BiggestWin.LastMatch.MatchId) };
-
-            teamStats.BiggestLoss.FirstMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(teamStats.BiggestLoss.FirstMatch.MatchId) };
-            teamStats.BiggestLoss.LastMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(teamStats.BiggestLoss.LastMatch.MatchId) };
-
-            teamStats.BiggestDraw.FirstMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(teamStats.BiggestDraw.FirstMatch.MatchId) };
-            teamStats.BiggestDraw.LastMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(teamStats.BiggestDraw.LastMatch.MatchId) };
+            if (teamStats.BiggestWin != null)
+            {
+                teamStats.BiggestWin.FirstMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(teamStats.BiggestWin.FirstMatch.MatchId) };
+                teamStats.BiggestWin.LastMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(teamStats.BiggestWin.LastMatch.MatchId) };
+                teamStats.MostWinsAgainst.Select(s => { s._navigation = new NavigationReferences { AllMatches = this.urlService.AllMatchesTeams(s.Team_1, s.Team_2, competitionId, seasonId) }; return s; }).ToList();
+            }
+            if (teamStats.BiggestLoss != null)
+            {
+                teamStats.BiggestLoss.FirstMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(teamStats.BiggestLoss.FirstMatch.MatchId) };
+                teamStats.BiggestLoss.LastMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(teamStats.BiggestLoss.LastMatch.MatchId) };
+                teamStats.MostLossesAgainst.Select(s => { s._navigation = new NavigationReferences { AllMatches = this.urlService.AllMatchesTeams(s.Team_1, s.Team_2, competitionId, seasonId) }; return s; }).ToList();
+            }
+            if (teamStats.BiggestDraw != null)
+            {
+                teamStats.BiggestDraw.FirstMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(teamStats.BiggestDraw.FirstMatch.MatchId) };
+                teamStats.BiggestDraw.LastMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(teamStats.BiggestDraw.LastMatch.MatchId) };
+                teamStats.MostDrawsAgainst.Select(s => { s._navigation = new NavigationReferences { AllMatches = this.urlService.AllMatchesTeams(s.Team_1, s.Team_2, competitionId, seasonId) }; return s; }).ToList();
+            }
 
             teamStats.MostGamesPlayedAgainst.Select(s => { s._navigation = new NavigationReferences { AllMatches = this.urlService.AllMatchesTeams(s.Team_1, s.Team_2, competitionId, seasonId) }; return s; }).ToList();
-            teamStats.MostWinsAgainst.Select(s => { s._navigation = new NavigationReferences { AllMatches = this.urlService.AllMatchesTeams(s.Team_1, s.Team_2, competitionId, seasonId) }; return s; }).ToList();
-            teamStats.MostLossesAgainst.Select(s => { s._navigation = new NavigationReferences { AllMatches = this.urlService.AllMatchesTeams(s.Team_1, s.Team_2, competitionId, seasonId) }; return s; }).ToList();
-            teamStats.MostDrawsAgainst.Select(s => { s._navigation = new NavigationReferences { AllMatches = this.urlService.AllMatchesTeams(s.Team_1, s.Team_2, competitionId, seasonId) }; return s; }).ToList();
 
             return teamStats;
         }
@@ -170,7 +177,7 @@ namespace Futbol.API.Services
 
         public StatsCompetitionSeason RetrieveCompetitionSeason(int competitionId, int seasonId)
         {
-            var matches = this.futbolRepository.RetrieveMatches(new FootballFilter { CompetitionId = competitionId, SeasonId = seasonId});
+            var matches = this.futbolRepository.RetrieveMatches(new FootballFilter { CompetitionId = competitionId, SeasonId = seasonId });
 
             if (matches == null || !matches.Any())
             {
@@ -216,13 +223,19 @@ namespace Futbol.API.Services
                 }
             };
 
-            stats.BiggestWin.FirstMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(stats.BiggestWin.FirstMatch.MatchId) };
-            stats.BiggestWin.LastMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(stats.BiggestWin.LastMatch.MatchId) };
-            stats.BiggestDraw.FirstMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(stats.BiggestDraw.FirstMatch.MatchId) };
-            stats.BiggestDraw.LastMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(stats.BiggestDraw.LastMatch.MatchId) };
+            if (stats.BiggestWin != null)
+            {
+                stats.BiggestWin.FirstMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(stats.BiggestWin.FirstMatch.MatchId) };
+                stats.BiggestWin.LastMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(stats.BiggestWin.LastMatch.MatchId) };
+            }
+            if (stats.BiggestDraw != null)
+            {
+                stats.BiggestDraw.FirstMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(stats.BiggestDraw.FirstMatch.MatchId) };
+                stats.BiggestDraw.LastMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(stats.BiggestDraw.LastMatch.MatchId) };
+            }
 
             return stats;
-        } 
+        }
 
         public StatsLeagueTable RetrieveStatsLeagueTable(int competitionId, int seasonId)
         {

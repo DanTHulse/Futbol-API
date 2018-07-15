@@ -51,6 +51,11 @@ namespace Futbol.API.Helpers
 
         public static StatsScores CalculateBiggestResult(this IEnumerable<Match> matches)
         {
+            if (matches == null || !matches.Any())
+            {
+                return null;
+            }
+
             var orderedMatches = matches.OrderByDescending(o => o.MatchData.FTGoals_1);
 
             var filteredMatches = orderedMatches.Where(w => w.MatchData.FTGoals_1 == orderedMatches.First().MatchData.FTGoals_1
@@ -70,6 +75,11 @@ namespace Futbol.API.Helpers
 
         public static IEnumerable<StatsTeamMatchups> CalculateMostPlayed(this IEnumerable<Match> matches, int teamId)
         {
+            if (matches == null || !matches.Any())
+            {
+                return null;
+            }
+
             var matchups = matches.Where(w => w.HomeTeamId == teamId).Select(s => new StatsTeamMatchups_Grouping
             {
                 FirstTeam = s.HomeTeam.TeamName,
