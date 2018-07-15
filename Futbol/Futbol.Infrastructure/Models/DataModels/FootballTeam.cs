@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Futbol.Common.Models.DataModels
@@ -11,12 +10,7 @@ namespace Futbol.Common.Models.DataModels
 
         public string TeamName { get; set; }
 
-        [JsonProperty("TeamDetails")]
-        public Uri Reference { get; set; }
-
-        public Uri Stats { get; set; }
-
-        public Uri AllMatches { get; set; }
+        public NavigationReferences _navigation { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public IEnumerable<FootballTeamSeasons> CompetitionSeasons { get; set; }
@@ -28,9 +22,7 @@ namespace Futbol.Common.Models.DataModels
 
         public int MatchCount { get; set; }
 
-        public Uri Stats { get; set; }
-
-        public Uri AllMatches { get; set; }
+        public NavigationReferences _navigation { get; set; }
 
         public IEnumerable<FootballTeamSeasonCompetitions> Competitions { get; set; }
     }
@@ -41,9 +33,7 @@ namespace Futbol.Common.Models.DataModels
 
         public int MatchCount { get; set; }
 
-        public Uri Stats { get; set; }
-
-        public Uri AllMatches { get; set; }
+        public NavigationReferences _navigation { get; set; }
     }
 
     public class FootballCompetitionSeasonsTeam_Data

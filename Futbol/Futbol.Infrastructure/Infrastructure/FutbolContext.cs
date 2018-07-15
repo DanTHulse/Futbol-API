@@ -80,19 +80,24 @@ namespace Futbol.Common.Infrastructure
             {
                 entity.HasKey(k => new { k.Score_1, k.Score_2 });
                 entity.Ignore(i => i.BoxScore);
-                entity.Ignore(i => i.ScoreStats);
+                entity.Ignore(i => i._navigation);
             });
 
             modelBuilder.Entity<FootballCompetitionSeasons>(entity =>
             {
                 entity.HasKey(k => k.SeasonId);
-                entity.Ignore(i => i.AllMatches);
-                entity.Ignore(i => i.Stats);
+                entity.Ignore(i => i._navigation);
             });
 
             modelBuilder.Entity<FootballCompetitionSeasonsTeam_Data>(entity =>
             {
                 entity.HasKey(k => new { k.SeasonId, k.CompetitionId });
+            });
+
+            modelBuilder.Entity<FootballSeasonCompetition>(entity =>
+            {
+                entity.HasKey(k => k.CompetitionId);
+                entity.Ignore(i => i._navigation);
             });
         }
     }

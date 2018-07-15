@@ -32,6 +32,7 @@ namespace Futbol.API.Controllers.V1
         /// <returns>Scorigami</returns>
         [HttpGet("Scorigami/")]
         [ProducesResponseType(200)]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<ActionResult<StatsScorigami>> RetrieveScorigami(
             [FromQuery]int? competitionId = null,
             [FromQuery]int? seasonId = null,
@@ -53,6 +54,7 @@ namespace Futbol.API.Controllers.V1
         /// <returns>Stats based around the provided box score</returns>
         [HttpGet("Scores/{firstBoxScore}/{secondBoxScore}")]
         [ProducesResponseType(200)]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<ActionResult<StatsScores>> RetrieveScoreStats(
             [FromRoute]int firstBoxScore,
             [FromRoute]int secondBoxScore,
@@ -74,6 +76,7 @@ namespace Futbol.API.Controllers.V1
         /// <returns>Stats based around the provided team</returns>
         [HttpGet("Teams/{teamId}")]
         [ProducesResponseType(200)]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<ActionResult<StatsTeam>> RetrieveTeamStats([FromRoute]int teamId, [FromQuery]int? competitionId = null, [FromQuery]int? seasonId = null)
         {
             var stats = await Task.Run(() => this.statsService.RetrieveTeamStats(teamId, competitionId, seasonId));
@@ -91,6 +94,7 @@ namespace Futbol.API.Controllers.V1
         /// <returns>Stats based around the provided fixture between two teams</returns>
         [HttpGet("Fixtures/{homeTeam}/{awayTeam}")]
         [ProducesResponseType(200)]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<ActionResult<StatsFixtures>> RetrieveFixtureStats([FromRoute]int homeTeam, [FromRoute]int awayTeam, [FromQuery]int? competitionId = null, [FromQuery]int? seasonId = null)
         {
             var stats = await Task.Run(() => this.statsService.RetrieveFixturesStats(homeTeam, awayTeam, competitionId, seasonId));
@@ -106,9 +110,26 @@ namespace Futbol.API.Controllers.V1
         /// <returns>Stats based around the competition and season as a whole</returns>
         [HttpGet("Competitions/{competitionId}/Seasons/{seasonId}")]
         [ProducesResponseType(200)]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<ActionResult<StatsCompetitionSeason>> RetrieveCompetitionSeasonStats([FromRoute]int competitionId, [FromRoute]int seasonId)
         {
             var stats = await Task.Run(() => this.statsService.RetrieveCompetitionSeason(competitionId, seasonId));
+
+            return this.Ok(stats);
+        }
+
+        /// <summary>
+        /// Retrieves the competition season table stats.
+        /// </summary>
+        /// <param name="competitionId">The competition identifier.</param>
+        /// <param name="seasonId">The season identifier.</param>
+        /// <returns>The table of stats for the competition and season</returns>
+        [HttpGet("Competitions/{competitionId}/Seasons/{seasonId}/Table")]
+        [ProducesResponseType(200)]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<ActionResult<StatsLeagueTable>> RetrieveCompetitionSeasonTableStats([FromRoute]int competitionId, [FromRoute]int seasonId)
+        {
+            var stats = await Task.Run(() => this.statsService.RetrieveStatsLeagueTable(competitionId, seasonId));
 
             return this.Ok(stats);
         }

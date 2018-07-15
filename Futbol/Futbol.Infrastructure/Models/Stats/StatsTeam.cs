@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Futbol.Common.Models.DataModels;
 using Newtonsoft.Json;
 
 namespace Futbol.Common.Models.Stats
@@ -35,7 +35,7 @@ namespace Futbol.Common.Models.Stats
 
         public int Count { get; set; }
 
-        public Uri AllMatches { get; set; }
+        public NavigationReferences _navigation { get; set; }
 
         [JsonIgnore]
         public int Team_1 { get; set; }

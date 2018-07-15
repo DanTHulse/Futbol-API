@@ -129,6 +129,13 @@ namespace Futbol.API.Repositories
             return seasons;
         }
 
+        public IEnumerable<FootballSeasonCompetition> GetSeasonCompetitions(int seasonId)
+        {
+            var seasons = this.futbolContext.Set<FootballSeasonCompetition>().FromSql("football.RetrieveSeasonCompetitions @seasonId = {0}", seasonId).ToList();
+
+            return seasons;
+        }
+
         public IEnumerable<FootballCompetitionSeasonsTeam_Data> GetCompetitionSeasonsByTeam(int teamId)
         {
             var seasons = this.futbolContext.Set<FootballCompetitionSeasonsTeam_Data>().FromSql("football.RetrieveCompetitionSeasonsByTeam @teamId = {0}", teamId).ToList();

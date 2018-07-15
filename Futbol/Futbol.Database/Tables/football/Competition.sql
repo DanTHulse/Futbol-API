@@ -3,6 +3,7 @@
 	[CompetitionId] INT NOT NULL IDENTITY(1,1),
 	[CompetitionName] NVARCHAR(MAX) NOT NULL,
 	[Country] NVARCHAR(100) NULL,
+	[Tier] INT NULL,
 
-	CONSTRAINT [PK_CompetitionId] PRIMARY KEY ([CompetitionId])
+    CONSTRAINT [PK_CompetitionId] PRIMARY KEY ([CompetitionId])
 )

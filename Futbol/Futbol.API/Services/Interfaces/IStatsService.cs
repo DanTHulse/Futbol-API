@@ -13,5 +13,7 @@ namespace Futbol.API.Services.Interfaces
         StatsFixtures RetrieveFixturesStats(int homeTeam, int awayTeam, int? competitionId, int? seasonId);
 
         StatsCompetitionSeason RetrieveCompetitionSeason(int competitionId, int seasonId);
+
+        StatsLeagueTable RetrieveStatsLeagueTable(int competitionId, int seasonId);
     }
 }

@@ -21,6 +21,8 @@ namespace Futbol.API.Repositories.Interfaces
 
         IEnumerable<FootballCompetitionSeasons> GetCompetitionSeasons(int competitionId);
 
+        IEnumerable<FootballSeasonCompetition> GetSeasonCompetitions(int seasonId);
+
         IEnumerable<FootballCompetitionSeasonsTeam_Data> GetCompetitionSeasonsByTeam(int teamId);
 
         IEnumerable<ScorigamiScores> RetrieveScorigami(int? competitionId, int? seasonId);

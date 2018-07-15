@@ -58,6 +58,9 @@ namespace Futbol.API.Helpers
         public Uri SeasonReference(int seasonId)
             => new Uri($"{this.FBUrl}/Seasons/{seasonId}");
 
+        public Uri SeasonTableStats(int competitionId, int seasonId)
+            => new Uri($"{this.StatsUrl}/Competitions/{competitionId}/Seasons/{seasonId}/Table");
+
         public Uri TeamReference(int teamId)
             => new Uri($"{this.FBUrl}/Teams/{teamId}");
 

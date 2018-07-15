@@ -30,6 +30,8 @@ namespace Futbol.API.Services.Interfaces
 
         Uri CompetitionSeasonStats(int competitionId, int seasonId);
 
+        Uri SeasonTableStats(int competitionId, int seasonId);
+
         Uri CompetitionReference(int competitionId);
 
         Uri SeasonReference(int seasonId);

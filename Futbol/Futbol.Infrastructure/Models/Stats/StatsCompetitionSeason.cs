@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using Futbol.Common.Models.DataModels;
 using Newtonsoft.Json;
 
 namespace Futbol.Common.Models.Stats
@@ -26,11 +26,11 @@ namespace Futbol.Common.Models.Stats
 
         public string MostGamesDrawn => $"{this.MostGamesDrawnAmount} - {this.MostGamesDrawnTeam}";
 
+        public NavigationReferences _navigation { get; set; }
+
         public StatsScores BiggestWin { get; set; }
 
         public StatsScores BiggestDraw { get; set; }
-
-        public IEnumerable<StatsLeagueTable> Table { get; set; }
 
         #region IgnoredProperties
 
@@ -79,30 +79,29 @@ namespace Futbol.Common.Models.Stats
         #endregion
     }
 
-    public class StatsLeagueTable
-    {
-        public string TeamName { get; set; }
-
-        [JsonProperty("TeamDetails")]
-        public Uri Reference { get; set; }
-
-        public Uri TeamStats { get; set; }
-    }
-
     public class StatsCompetitionSeasonTeams
     {
         public string TeamName { get; set; }
 
+        [JsonIgnore]
         public int TeamId { get; set; }
+
+        public int GamesWon { get; set; }
+
+        public int GamesDrawn { get; set; }
+
+        public int GamesLost { get; set; }
 
         public int GoalsScored { get; set; }
 
         public int GoalsConceded { get; set; }
 
-        public int GamesWon { get; set; }
+        public string GoalDifference => (this.GoalsScored - this.GoalsConceded).ToString("+0;-#");
 
-        public int GamesLost { get; set; }
+        [JsonIgnore]
+        public int TablePoints => ((this.GamesWon * 3) + (this.GamesDrawn));
 
-        public int GamesDrawn { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public NavigationReferences _navigation { get; set; }
     }
 }

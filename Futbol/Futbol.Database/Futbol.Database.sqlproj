@@ -73,6 +73,7 @@
     <Build Include="Stored Procedures\football\RetrieveScorigami.sql" />
     <Build Include="Stored Procedures\football\RetrieveCompetitionSeasons.sql" />
     <Build Include="Stored Procedures\football\RetrieveCompetitionSeasonsByTeam.sql" />
+    <Build Include="Stored Procedures\football\RetrieveSeasonCompetitions.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Futbol.Database.publish.xml" />

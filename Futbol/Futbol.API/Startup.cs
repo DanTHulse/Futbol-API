@@ -60,8 +60,7 @@ namespace Futbol.API
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "FUTBOL API V1");
                 c.RoutePrefix = string.Empty;
-                c.DocExpansion(DocExpansion.None);
-                
+                c.DocExpansion(DocExpansion.List);                
             });
 
             app.UseMiddleware(typeof(ErrorHandlerMiddleware));

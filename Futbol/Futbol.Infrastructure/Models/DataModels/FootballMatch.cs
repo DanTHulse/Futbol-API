@@ -22,10 +22,7 @@ namespace Futbol.Common.Models.DataModels
 
         public string HalfTimeBoxScore { get; set; }
 
-        public Uri FixtureStats { get; set; }
-
-        [JsonProperty("MatchDetails")]
-        public Uri Reference { get; set; }
+        public NavigationReferences _navigation { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public FootballMatchData MatchData { get; set; }
@@ -38,24 +35,16 @@ namespace Futbol.Common.Models.DataModels
 
         public string HomeTeam { get; set; }
 
-        public Uri HomeTeamReference { get; set; }
-
         [JsonIgnore]
         public int AwayTeamId { get; set; }
 
         public string AwayTeam { get; set; }
-
-        public Uri AwayTeamReference { get; set; }
 
         [JsonIgnore]
         public int CompetitionId { get; set; }
 
         [JsonIgnore]
         public int SeasonId { get; set; }
-
-        public Uri CompetitionReference { get; set; }
-
-        public Uri SeasonReference { get; set; }
 
         public int? FullTimeHomeGoals { get; set; }
 
@@ -73,8 +62,6 @@ namespace Futbol.Common.Models.DataModels
 
         public int? AwayShotsOnTarget { get; set; }
 
-        public Uri ScoreStats { get; set; }
-
-        public Uri HalfTimeScoreStats { get; set; }
+        public NavigationReferences _navigation { get; set; }
     }
 }

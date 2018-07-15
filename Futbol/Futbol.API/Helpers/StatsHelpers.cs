@@ -17,7 +17,7 @@ namespace Futbol.API.Helpers
                 AwayTeam = $"{match.AwayTeam.TeamName}",
                 MatchDate = match.MatchDate,
                 CompetitionSeason = $"{match.Competition.CompetitionName} {match.Season.SeasonPeriod}",
-                MatchId = match.MatchId,
+                MatchId = match.MatchId
             };
         }
 
@@ -113,31 +113,31 @@ namespace Futbol.API.Helpers
             return stats;
         }
 
-        public static IEnumerable<StatsCompetitionSeasonTeams> CalculateTeamRecords(this IEnumerable<Match> matches, IEnumerable<int> teams)
+        public static IEnumerable<StatsCompetitionSeasonTeams> CalculateTeamRecords(this IEnumerable<Match> matches, IEnumerable<(int teamId, string teamName)> teams)
         {
             var teamRecords = new List<StatsCompetitionSeasonTeams>();
 
             foreach (var team in teams)
             {
-                var goalsScored = (matches.Where(w => ((w.MatchData.FTResult == "H" || w.MatchData.FTResult == "D") && w.HomeTeamId == team)
-                            || (w.MatchData.FTResult == "A" && w.AwayTeamId == team)).Sum(s => s.MatchData.FTGoals_1.Value))
-                                + (matches.Where(w => (w.MatchData.FTResult == "H" && w.AwayTeamId == team)
-                            || (w.MatchData.FTResult == "A" && w.HomeTeamId == team)).Sum(s => s.MatchData.FTGoals_2.Value));
+                var goalsScored = (matches.Where(w => ((w.MatchData.FTResult == "H" || w.MatchData.FTResult == "D") && w.HomeTeamId == team.teamId)
+                            || (w.MatchData.FTResult == "A" && w.AwayTeamId == team.teamId)).Sum(s => s.MatchData.FTGoals_1.Value))
+                                + (matches.Where(w => (w.MatchData.FTResult == "H" && w.AwayTeamId == team.teamId)
+                            || (w.MatchData.FTResult == "A" && w.HomeTeamId == team.teamId)).Sum(s => s.MatchData.FTGoals_2.Value));
 
-                var goalsConceded = (matches.Where(w => ((w.MatchData.FTResult == "H" || w.MatchData.FTResult == "D") && w.AwayTeamId == team)
-                            || (w.MatchData.FTResult == "A" && w.HomeTeamId == team)).Sum(s => s.MatchData.FTGoals_1.Value))
-                                  + (matches.Where(w => (w.MatchData.FTResult == "H" && w.HomeTeamId == team)
-                            || (w.MatchData.FTResult == "A" && w.AwayTeamId == team)).Sum(s => s.MatchData.FTGoals_2.Value));
+                var goalsConceded = (matches.Where(w => ((w.MatchData.FTResult == "H" || w.MatchData.FTResult == "D") && w.AwayTeamId == team.teamId)
+                            || (w.MatchData.FTResult == "A" && w.HomeTeamId == team.teamId)).Sum(s => s.MatchData.FTGoals_1.Value))
+                                  + (matches.Where(w => (w.MatchData.FTResult == "H" && w.HomeTeamId == team.teamId)
+                            || (w.MatchData.FTResult == "A" && w.AwayTeamId == team.teamId)).Sum(s => s.MatchData.FTGoals_2.Value));
 
                 teamRecords.Add(new StatsCompetitionSeasonTeams
                 {
-                    TeamName = matches.FirstOrDefault(f => f.HomeTeamId == team).HomeTeam.TeamName,
-                    TeamId = team,
+                    TeamName = team.teamName,
+                    TeamId = team.teamId,
                     GoalsScored = goalsScored,
                     GoalsConceded = goalsConceded,
-                    GamesWon = matches.SplitMatchesByResult(team, Result.Win).all.Count(),
-                    GamesLost = matches.SplitMatchesByResult(team, Result.Loss).all.Count(),
-                    GamesDrawn = matches.SplitMatchesByResult(team, Result.Draw).all.Count()
+                    GamesWon = matches.SplitMatchesByResult(team.teamId, Result.Win).all?.Count() ?? 0,
+                    GamesLost = matches.SplitMatchesByResult(team.teamId, Result.Loss).all?.Count() ?? 0,
+                    GamesDrawn = matches.SplitMatchesByResult(team.teamId, Result.Draw).all?.Count() ?? 0
                 });
             }
 

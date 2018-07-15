@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Futbol.API.Helpers;
 using Futbol.API.Repositories.Interfaces;
 using Futbol.API.Services.Interfaces;
@@ -42,8 +43,8 @@ namespace Futbol.API.Services
                 AllMatches = this.urlService.AllMatchesForScoreline(firstBoxScore, secondBoxScore, competitionId, seasonId)
             };
 
-            scoreStats.FirstMatch.MatchData = this.urlService.MatchReference(scoreStats.FirstMatch.MatchId);
-            scoreStats.LastMatch.MatchData = this.urlService.MatchReference(scoreStats.LastMatch.MatchId);
+            scoreStats.FirstMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(scoreStats.FirstMatch.MatchId) };
+            scoreStats.LastMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(scoreStats.LastMatch.MatchId) };
 
             return scoreStats;
         }
@@ -54,7 +55,7 @@ namespace Futbol.API.Services
 
             var stats = matchData
                 .Where(w => w.Score_1.HasValue)
-                .Select(s => { s.ScoreStats = this.urlService.ScoreStats(s.Score_1, s.Score_2, competitionId, seasonId, fullTime); return s; });
+                .Select(s => { s._navigation = new NavigationReferences { ScoreStats = this.urlService.ScoreStats(s.Score_1, s.Score_2, competitionId, seasonId, fullTime) }; return s; });
 
             return new StatsScorigami { Scores = stats };
         }
@@ -110,19 +111,19 @@ namespace Futbol.API.Services
                 MostDrawsAgainst = draws.all.CalculateMostPlayed(team.TeamId)
             };
 
-            teamStats.BiggestWin.FirstMatch.MatchData = this.urlService.MatchReference(teamStats.BiggestWin.FirstMatch.MatchId);
-            teamStats.BiggestWin.LastMatch.MatchData = this.urlService.MatchReference(teamStats.BiggestWin.LastMatch.MatchId);
+            teamStats.BiggestWin.FirstMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(teamStats.BiggestWin.FirstMatch.MatchId) };
+            teamStats.BiggestWin.LastMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(teamStats.BiggestWin.LastMatch.MatchId) };
 
-            teamStats.BiggestLoss.FirstMatch.MatchData = this.urlService.MatchReference(teamStats.BiggestLoss.FirstMatch.MatchId);
-            teamStats.BiggestLoss.LastMatch.MatchData = this.urlService.MatchReference(teamStats.BiggestLoss.LastMatch.MatchId);
+            teamStats.BiggestLoss.FirstMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(teamStats.BiggestLoss.FirstMatch.MatchId) };
+            teamStats.BiggestLoss.LastMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(teamStats.BiggestLoss.LastMatch.MatchId) };
 
-            teamStats.BiggestDraw.FirstMatch.MatchData = this.urlService.MatchReference(teamStats.BiggestDraw.FirstMatch.MatchId);
-            teamStats.BiggestDraw.LastMatch.MatchData = this.urlService.MatchReference(teamStats.BiggestDraw.LastMatch.MatchId);
+            teamStats.BiggestDraw.FirstMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(teamStats.BiggestDraw.FirstMatch.MatchId) };
+            teamStats.BiggestDraw.LastMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(teamStats.BiggestDraw.LastMatch.MatchId) };
 
-            teamStats.MostGamesPlayedAgainst.Select(s => { s.AllMatches = this.urlService.AllMatchesTeams(s.Team_1, s.Team_2, competitionId, seasonId); return s; }).ToList();
-            teamStats.MostWinsAgainst.Select(s => { s.AllMatches = this.urlService.AllMatchesTeams(s.Team_1, s.Team_2, competitionId, seasonId); return s; }).ToList();
-            teamStats.MostLossesAgainst.Select(s => { s.AllMatches = this.urlService.AllMatchesTeams(s.Team_1, s.Team_2, competitionId, seasonId); return s; }).ToList();
-            teamStats.MostDrawsAgainst.Select(s => { s.AllMatches = this.urlService.AllMatchesTeams(s.Team_1, s.Team_2, competitionId, seasonId); return s; }).ToList();
+            teamStats.MostGamesPlayedAgainst.Select(s => { s._navigation = new NavigationReferences { AllMatches = this.urlService.AllMatchesTeams(s.Team_1, s.Team_2, competitionId, seasonId) }; return s; }).ToList();
+            teamStats.MostWinsAgainst.Select(s => { s._navigation = new NavigationReferences { AllMatches = this.urlService.AllMatchesTeams(s.Team_1, s.Team_2, competitionId, seasonId) }; return s; }).ToList();
+            teamStats.MostLossesAgainst.Select(s => { s._navigation = new NavigationReferences { AllMatches = this.urlService.AllMatchesTeams(s.Team_1, s.Team_2, competitionId, seasonId) }; return s; }).ToList();
+            teamStats.MostDrawsAgainst.Select(s => { s._navigation = new NavigationReferences { AllMatches = this.urlService.AllMatchesTeams(s.Team_1, s.Team_2, competitionId, seasonId) }; return s; }).ToList();
 
             return teamStats;
         }
@@ -154,12 +155,15 @@ namespace Futbol.API.Services
                     GoalsAgainst = (matches.Where(w => w.MatchData.FTResult == "H" || w.MatchData.FTResult == "D").Sum(s => s.MatchData.FTGoals_2.Value)
                                   + matches.Where(w => w.MatchData.FTResult == "A").Sum(s => s.MatchData.FTGoals_1.Value))
                 },
-                ReverseFixture = this.urlService.FixtureStats(firstMatch.AwayTeamId, firstMatch.HomeTeamId, competitionId, seasonId),
-                AllMatches = this.urlService.AllMatchesTeams(homeTeam, awayTeam, competitionId, seasonId)
+                _navigation = new NavigationReferences
+                {
+                    ReverseFixtureStats = this.urlService.FixtureStats(firstMatch.AwayTeamId, firstMatch.HomeTeamId, competitionId, seasonId),
+                    AllMatches = this.urlService.AllMatchesTeams(homeTeam, awayTeam, competitionId, seasonId)
+                }
             };
 
-            fixtureStats.FirstResult.MatchData = this.urlService.MatchReference(fixtureStats.FirstResult.MatchId);
-            fixtureStats.LastResults.Select(s => { s.MatchData = this.urlService.MatchReference(s.MatchId); return s; }).ToList();
+            fixtureStats.FirstResult._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(fixtureStats.FirstResult.MatchId) };
+            fixtureStats.LastResults.Select(s => { s._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(s.MatchId) }; return s; }).ToList();
 
             return fixtureStats;
         }
@@ -173,8 +177,8 @@ namespace Futbol.API.Services
                 return null;
             }
 
-            var allTeams = matches.Select(s => s.HomeTeamId).ToList();
-            allTeams.AddRange(matches.Select(s => s.AwayTeamId).ToList());
+            List<(int teamId, string teamName)> allTeams = matches.Select(s => (s.HomeTeamId, s.HomeTeam.TeamName)).ToList();
+            allTeams.AddRange(matches.Select(s => (s.AwayTeamId, s.AwayTeam.TeamName)).ToList());
 
             var distinctTeams = allTeams.Distinct();
 
@@ -206,20 +210,64 @@ namespace Futbol.API.Services
                 MostGamesLostAmount = gamesLost.GamesLost,
                 MostGamesDrawnTeam = gamesDrawn.TeamName,
                 MostGamesDrawnAmount = gamesDrawn.GamesDrawn,
-                Table = teamRecords.Select(s => new StatsLeagueTable
+                _navigation = new NavigationReferences
                 {
-                    TeamName = s.TeamName,
-                    Reference = this.urlService.TeamReference(s.TeamId),
-                    TeamStats = this.urlService.TeamStats(s.TeamId, competitionId, seasonId)
-                })
+                    SeasonTable = this.urlService.SeasonTableStats(competitionId, seasonId)
+                }
             };
 
-            stats.BiggestWin.FirstMatch.MatchData = this.urlService.MatchReference(stats.BiggestWin.FirstMatch.MatchId);
-            stats.BiggestWin.LastMatch.MatchData = this.urlService.MatchReference(stats.BiggestWin.LastMatch.MatchId);
-            stats.BiggestDraw.FirstMatch.MatchData = this.urlService.MatchReference(stats.BiggestDraw.FirstMatch.MatchId);
-            stats.BiggestDraw.LastMatch.MatchData = this.urlService.MatchReference(stats.BiggestDraw.LastMatch.MatchId);
+            stats.BiggestWin.FirstMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(stats.BiggestWin.FirstMatch.MatchId) };
+            stats.BiggestWin.LastMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(stats.BiggestWin.LastMatch.MatchId) };
+            stats.BiggestDraw.FirstMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(stats.BiggestDraw.FirstMatch.MatchId) };
+            stats.BiggestDraw.LastMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(stats.BiggestDraw.LastMatch.MatchId) };
 
             return stats;
         } 
+
+        public StatsLeagueTable RetrieveStatsLeagueTable(int competitionId, int seasonId)
+        {
+            var matches = this.futbolRepository.RetrieveMatches(new FootballFilter { CompetitionId = competitionId, SeasonId = seasonId });
+
+            if (matches == null || !matches.Any())
+            {
+                return null;
+            }
+
+            List<(int teamId, string teamName)> allTeams = matches.Select(s => (s.HomeTeamId, s.HomeTeam.TeamName)).ToList();
+            allTeams.AddRange(matches.Select(s => (s.AwayTeamId, s.AwayTeam.TeamName)).ToList());
+
+            var distinctTeams = allTeams.Distinct();
+
+            var teamRecords = matches.CalculateTeamRecords(distinctTeams);
+            var firstMatch = matches.First();
+
+            return new StatsLeagueTable
+            {
+                CompetitionName = firstMatch.Competition.CompetitionName,
+                SeasonPeriod = firstMatch.Season.SeasonPeriod,
+                Tier = firstMatch.Competition.Tier,
+                _navigation = new NavigationReferences
+                {
+                    CompetitionStats = this.urlService.CompetitionSeasonStats(firstMatch.CompetitionId, firstMatch.SeasonId),
+                    CompetitionDetails = this.urlService.CompetitionReference(firstMatch.CompetitionId),
+                    SeasonDetails = this.urlService.SeasonReference(firstMatch.SeasonId)
+                },
+                Teams = teamRecords.Select(s => new StatsCompetitionSeasonTeams
+                {
+                    TeamName = s.TeamName,
+                    TeamId = s.TeamId,
+                    GoalsScored = s.GoalsScored,
+                    GoalsConceded = s.GoalsConceded,
+                    GamesWon = s.GamesWon,
+                    GamesLost = s.GamesLost,
+                    GamesDrawn = s.GamesDrawn,
+                    _navigation = new NavigationReferences
+                    {
+                        TeamDetails = this.urlService.TeamReference(s.TeamId),
+                        TeamStats = this.urlService.TeamStats(s.TeamId, competitionId, seasonId)
+                    }
+                }).OrderByDescending(o => o.TablePoints).ThenByDescending(o => (o.GoalsScored - o.GoalsConceded))
+            };
+        }
     }
 }

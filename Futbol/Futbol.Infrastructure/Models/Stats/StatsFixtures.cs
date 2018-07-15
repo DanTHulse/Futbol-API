@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Futbol.Common.Models.DataModels;
 
 namespace Futbol.Common.Models.Stats
 {
@@ -15,8 +15,6 @@ namespace Futbol.Common.Models.Stats
 
         public StatsRecord HomeTeamRecord { get; set; }
 
-        public Uri ReverseFixture { get; set; }
-
-        public Uri AllMatches { get; set; }
+        public NavigationReferences _navigation { get; set; }
     }
 }

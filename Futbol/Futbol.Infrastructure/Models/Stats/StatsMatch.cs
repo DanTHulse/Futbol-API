@@ -1,4 +1,5 @@
 ﻿using System;
+using Futbol.Common.Models.DataModels;
 using Newtonsoft.Json;
 
 namespace Futbol.Common.Models.Stats
@@ -18,6 +19,6 @@ namespace Futbol.Common.Models.Stats
         [JsonIgnore]
         public int MatchId { get; set; }
 
-        public Uri MatchData { get; set; }
+        public NavigationReferences _navigation { get; set; }
     }
 }

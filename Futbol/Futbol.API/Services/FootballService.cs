@@ -50,12 +50,19 @@ namespace Futbol.API.Services
                 CompetitionName = competition.CompetitionName,
                 Country = competition.Country,
                 Tier = competition.Tier,
-                Reference = this.urlService.CompetitionReference(competition.CompetitionId),
-                AllMatches = this.urlService.AllMatchesCompetition(competition.CompetitionId),
+                _navigation = new NavigationReferences
+                {
+                    CompetitionDetails = this.urlService.CompetitionReference(competition.CompetitionId),
+                    AllMatches = this.urlService.AllMatchesCompetition(competition.CompetitionId)
+                },
                 Seasons = seasons.Select(s =>
                     {
-                        s.AllMatches = this.urlService.AllMatchesCompetitionSeason(competition.CompetitionId, s.SeasonId);
-                        s.Stats = this.urlService.CompetitionSeasonStats(competition.CompetitionId, s.SeasonId);
+                        s._navigation = new NavigationReferences
+                        {
+                            SeasonDetails = this.urlService.SeasonReference(s.SeasonId),
+                            AllMatches = this.urlService.AllMatchesCompetitionSeason(competition.CompetitionId, s.SeasonId),
+                            SeasonStats = this.urlService.CompetitionSeasonStats(competition.CompetitionId, s.SeasonId)
+                        };
                         return s;
                     })
             };
@@ -70,20 +77,38 @@ namespace Futbol.API.Services
                 CompetitionName = s.CompetitionName,
                 Country = s.Country,
                 Tier = s.Tier,
-                Reference = this.urlService.CompetitionReference(s.CompetitionId),
-                AllMatches = this.urlService.AllMatchesCompetition(s.CompetitionId)
+                _navigation = new NavigationReferences
+                {
+                    CompetitionDetails = this.urlService.CompetitionReference(s.CompetitionId),
+                    AllMatches = this.urlService.AllMatchesCompetition(s.CompetitionId)
+                }
             });
         }
 
         public FootballSeason GetSeasonById(int seasonId)
         {
             var season = this.futbolRepository.GetById<Season>(seasonId);
+            var competitions = this.futbolRepository.GetSeasonCompetitions(seasonId);
+
             return new FootballSeason
             {
                 SeasonId = season.SeasonId,
                 SeasonPeriod = season.SeasonPeriod,
-                Reference = this.urlService.SeasonReference(season.SeasonId),
-                AllMatches = this.urlService.AllMatchesSeason(season.SeasonId)
+                _navigation = new NavigationReferences
+                {
+                    SeasonDetails = this.urlService.SeasonReference(season.SeasonId),
+                    AllMatches = this.urlService.AllMatchesSeason(season.SeasonId)
+                },
+                Competitions = competitions.Select(s =>
+                    {
+                        s._navigation = new NavigationReferences
+                        {
+                            CompetitionDetails = this.urlService.CompetitionReference(s.CompetitionId),
+                            AllMatches = this.urlService.AllMatchesCompetitionSeason(s.CompetitionId, season.SeasonId),
+                            CompetitionStats = this.urlService.CompetitionSeasonStats(s.CompetitionId, season.SeasonId)
+                        };
+                        return s;
+                    })
             };
         }
 
@@ -94,8 +119,11 @@ namespace Futbol.API.Services
             {
                 SeasonId = s.SeasonId,
                 SeasonPeriod = s.SeasonPeriod,
-                Reference = this.urlService.SeasonReference(s.SeasonId),
-                AllMatches = this.urlService.AllMatchesSeason(s.SeasonId)
+                _navigation = new NavigationReferences
+                {
+                    SeasonDetails = this.urlService.SeasonReference(s.SeasonId),
+                    AllMatches = this.urlService.AllMatchesSeason(s.SeasonId)
+                }
             });
         }
 
@@ -113,25 +141,36 @@ namespace Futbol.API.Services
                     {
                         CompetitionName = r.CompetitionName,
                         MatchCount = r.MatchCount,
-                        Stats = this.urlService.TeamStats(teamId, r.CompetitionId, s.Key.SeasonId),
-                        AllMatches = this.urlService.AllMatchesTeam(teamId, r.CompetitionId, s.Key.SeasonId)
+                        _navigation = new NavigationReferences
+                        {
+                            CompetitionDetails = this.urlService.CompetitionReference(r.CompetitionId),
+                            TeamCompetitionStats = this.urlService.TeamStats(teamId, r.CompetitionId, s.Key.SeasonId),
+                            AllMatches = this.urlService.AllMatchesTeam(teamId, r.CompetitionId, s.Key.SeasonId)
+                        }
                     })
-                 });
+                });
 
             return new FootballTeam
             {
                 TeamId = team.TeamId,
                 TeamName = team.TeamName,
-                Reference = this.urlService.TeamReference(team.TeamId),
-                Stats = this.urlService.TeamStats(team.TeamId),
-                AllMatches = this.urlService.AllMatchesTeam(team.TeamId),
+                _navigation = new NavigationReferences
+                {
+                    TeamDetails = this.urlService.TeamReference(team.TeamId),
+                    TeamStats = this.urlService.TeamStats(team.TeamId),
+                    AllMatches = this.urlService.AllMatchesTeam(team.TeamId),
+                },
                 CompetitionSeasons = groupedSeasons.Select(s => new FootballTeamSeasons
                 {
                     SeasonPeriod = s.Key.SeasonPeriod,
                     MatchCount = s.Value.Sum(x => x.MatchCount),
                     Competitions = s.Value,
-                    Stats = this.urlService.TeamStats(teamId, null, s.Key.SeasonId),
-                    AllMatches = this.urlService.AllMatchesTeam(teamId, null, s.Key.SeasonId)
+                    _navigation = new NavigationReferences
+                    {
+                        SeasonDetails = this.urlService.SeasonReference(s.Key.SeasonId),
+                        TeamSeasonStats = this.urlService.TeamStats(teamId, null, s.Key.SeasonId),
+                        AllMatches = this.urlService.AllMatchesTeam(teamId, null, s.Key.SeasonId)
+                    }
                 })
             };
         }
@@ -144,9 +183,12 @@ namespace Futbol.API.Services
             {
                 TeamId = s.TeamId,
                 TeamName = s.TeamName,
-                Reference = this.urlService.TeamReference(s.TeamId),
-                Stats = this.urlService.TeamStats(s.TeamId),
-                AllMatches = this.urlService.AllMatchesTeam(s.TeamId)
+                _navigation = new NavigationReferences
+                {
+                    TeamDetails = this.urlService.TeamReference(s.TeamId),
+                    TeamStats = this.urlService.TeamStats(s.TeamId),
+                    AllMatches = this.urlService.AllMatchesTeam(s.TeamId)
+                }
             });
         }
 
@@ -164,8 +206,11 @@ namespace Futbol.API.Services
                 HalfTimeBoxScore = $"{s.MatchData.HTHomeGoals}-{s.MatchData.HTAwayGoals}",
                 HalfTimeResult = $"{s.MatchData.HTResult}",
                 Competition = $"{s.Competition.CompetitionName} {s.Season.SeasonPeriod}",
-                FixtureStats = this.urlService.FixtureStats(s.HomeTeamId, s.AwayTeamId, null, null),
-                Reference = this.urlService.MatchReference(s.MatchId)
+                _navigation = new NavigationReferences
+                {
+                    FixtureStats = this.urlService.FixtureStats(s.HomeTeamId, s.AwayTeamId, null, null),
+                    MatchDetails = this.urlService.MatchReference(s.MatchId)
+                }
             }).ToList();
         }
 
@@ -181,8 +226,11 @@ namespace Futbol.API.Services
                 HalfTimeBoxScore = $"{match.MatchData.HTHomeGoals}-{match.MatchData.HTAwayGoals}",
                 HalfTimeResult = $"{match.MatchData.HTResult}",
                 Competition = $"{match.Competition.CompetitionName} {match.Season.SeasonPeriod}",
-                FixtureStats = this.urlService.FixtureStats(match.HomeTeamId, match.AwayTeamId, null, null),
-                Reference = this.urlService.MatchReference(match.MatchId),
+                _navigation = new NavigationReferences
+                {
+                    FixtureStats = this.urlService.FixtureStats(match.HomeTeamId, match.AwayTeamId, null, null),
+                    MatchDetails = this.urlService.MatchReference(match.MatchId),
+                },
                 MatchData = new FootballMatchData
                 {
                     HomeTeam = match.HomeTeam.TeamName,
@@ -199,12 +247,15 @@ namespace Futbol.API.Services
                     HomeShotsOnTarget = match.MatchData.HomeShotsOnTarget,
                     AwayShots = match.MatchData.AwayShots,
                     AwayShotsOnTarget = match.MatchData.AwayShotsOnTarget,
-                    HomeTeamReference = this.urlService.TeamReference(match.HomeTeamId),
-                    AwayTeamReference = this.urlService.TeamReference(match.AwayTeamId),
-                    CompetitionReference = this.urlService.CompetitionReference(match.CompetitionId),
-                    SeasonReference = this.urlService.SeasonReference(match.SeasonId),
-                    ScoreStats = match.MatchData.FTGoals_1 == null ? null : this.urlService.ScoreStats(match.MatchData.FTGoals_1, match.MatchData.FTGoals_2, null, null, true),
-                    HalfTimeScoreStats = match.MatchData.HTGoals_1 == null ? null : this.urlService.ScoreStats(match.MatchData.HTGoals_1, match.MatchData.HTGoals_2, null, null, false),
+                    _navigation = new NavigationReferences
+                    {
+                        HomeTeamDetails = this.urlService.TeamReference(match.HomeTeamId),
+                        AwayTeamDetails = this.urlService.TeamReference(match.AwayTeamId),
+                        CompetitionDetails = this.urlService.CompetitionReference(match.CompetitionId),
+                        SeasonDetails = this.urlService.SeasonReference(match.SeasonId),
+                        ScoreStats = match.MatchData.FTGoals_1 == null ? null : this.urlService.ScoreStats(match.MatchData.FTGoals_1, match.MatchData.FTGoals_2, null, null, true),
+                        HalfTimeScoreStats = match.MatchData.HTGoals_1 == null ? null : this.urlService.ScoreStats(match.MatchData.HTGoals_1, match.MatchData.HTGoals_2, null, null, false),
+                    }
                 }
             };
         }
