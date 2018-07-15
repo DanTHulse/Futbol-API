@@ -12,4 +12,4 @@ AS
 	   OR (@competitionId = 0 AND m.[CompetitionId] = m.[CompetitionId])
 
 	GROUP BY s.[SeasonPeriod], s.[SeasonId]
-	ORDER BY s.[SeasonPeriod] ASC
+	ORDER BY s.[SeasonPeriod] DESC
