@@ -40,7 +40,10 @@ namespace Futbol.API.Services
                 FirstMatch = firstMatch.BuildResults(),
                 LastMatch = lastMatch.BuildResults(),
                 Count = matches.Count(),
-                AllMatches = this.urlService.AllMatchesForScoreline(firstBoxScore, secondBoxScore, competitionId, seasonId)
+                _navigation = new NavigationReferences
+                {
+                    AllMatches = this.urlService.AllMatchesForScoreline(firstBoxScore, secondBoxScore, competitionId, seasonId)
+                }
             };
 
             scoreStats.FirstMatch._navigation = new NavigationReferences { MatchDetails = this.urlService.MatchReference(scoreStats.FirstMatch.MatchId) };
