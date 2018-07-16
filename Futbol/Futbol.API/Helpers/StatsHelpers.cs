@@ -131,12 +131,12 @@ namespace Futbol.API.Helpers
             {
                 var goalsScored = (matches.Where(w => ((w.MatchData.FTResult == "H" || w.MatchData.FTResult == "D") && w.HomeTeamId == team.teamId)
                             || (w.MatchData.FTResult == "A" && w.AwayTeamId == team.teamId)).Sum(s => s.MatchData.FTGoals_1.Value))
-                                + (matches.Where(w => (w.MatchData.FTResult == "H" && w.AwayTeamId == team.teamId)
+                                + (matches.Where(w => ((w.MatchData.FTResult == "H" || w.MatchData.FTResult == "D") && w.AwayTeamId == team.teamId)
                             || (w.MatchData.FTResult == "A" && w.HomeTeamId == team.teamId)).Sum(s => s.MatchData.FTGoals_2.Value));
 
                 var goalsConceded = (matches.Where(w => ((w.MatchData.FTResult == "H" || w.MatchData.FTResult == "D") && w.AwayTeamId == team.teamId)
                             || (w.MatchData.FTResult == "A" && w.HomeTeamId == team.teamId)).Sum(s => s.MatchData.FTGoals_1.Value))
-                                  + (matches.Where(w => (w.MatchData.FTResult == "H" && w.HomeTeamId == team.teamId)
+                                  + (matches.Where(w => ((w.MatchData.FTResult == "H" || w.MatchData.FTResult == "D") && w.HomeTeamId == team.teamId)
                             || (w.MatchData.FTResult == "A" && w.AwayTeamId == team.teamId)).Sum(s => s.MatchData.FTGoals_2.Value));
 
                 teamRecords.Add(new StatsCompetitionSeasonTeams
