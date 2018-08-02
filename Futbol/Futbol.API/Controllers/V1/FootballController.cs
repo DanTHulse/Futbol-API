@@ -36,7 +36,7 @@ namespace Futbol.API.Controllers.V1
         /// <returns>A list of matches based on the provided filters</returns>
         [HttpGet("Matches/")]
         [SwaggerResponse(200, "List of Football Matches", typeof(IEnumerable<FootballMatch>))]
-        //[ApiExplorerSettings(IgnoreApi = true)]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<ActionResult<IEnumerable<FootballMatch>>> SearchScores([FromQuery]FootballFilter filter = null, int pageNumber = 1, int pageSize = 100)
         {
             if (filter != null && filter.MatchId.HasValue)
