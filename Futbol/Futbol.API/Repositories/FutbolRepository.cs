@@ -20,7 +20,7 @@ namespace Futbol.API.Repositories
 
         #region Retrieve Matches
 
-        public IEnumerable<Match> RetrieveMatches(FootballFilter filter)
+        public IEnumerable<Match> RetrieveMatches(FootballFilter filter, int pageNumber, int pageSize)
         {
             var matches = this.futbolContext.Match
                 .Include(i => i.MatchData)
@@ -44,9 +44,10 @@ namespace Futbol.API.Repositories
                                     && w.MatchData.HTAwayGoals == filter.HalftimeBoxScoreSecond.Value)
                                 || (w.MatchData.HTAwayGoals == filter.HalftimeBoxScoreFirst.Value
                                     && w.MatchData.HTHomeGoals == filter.HalftimeBoxScoreSecond.Value)))
-                 .OrderBy(o => o.MatchDate).ToList();
+                 .OrderBy(o => o.MatchDate)
+                 .Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
-            return matches;
+            return matches.ToList();
         }
 
         public IEnumerable<Match> RetrieveMatchesByScore(int firstBoxScore, int secondBoxScore, int? competitionId, int? seasonId, bool fullTime)

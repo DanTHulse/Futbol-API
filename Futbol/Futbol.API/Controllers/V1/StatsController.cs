@@ -2,6 +2,7 @@
 using Futbol.API.Services.Interfaces;
 using Futbol.Common.Models.Stats;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Futbol.API.Controllers.V1
 {
@@ -31,7 +32,7 @@ namespace Futbol.API.Controllers.V1
         /// <param name="fullTime">if set to <c>true</c> [full time].</param>
         /// <returns>Scorigami</returns>
         [HttpGet("Scorigami/")]
-        [ProducesResponseType(200)]
+        [SwaggerResponse(200, "Scorigami", typeof(StatsScorigami))]
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<ActionResult<StatsScorigami>> RetrieveScorigami(
             [FromQuery]int? competitionId = null,
@@ -53,7 +54,7 @@ namespace Futbol.API.Controllers.V1
         /// <param name="fullTime">if set to <c>true</c> [full time].</param>
         /// <returns>Stats based around the provided box score</returns>
         [HttpGet("Scores/{firstBoxScore}/{secondBoxScore}")]
-        [ProducesResponseType(200)]
+        [SwaggerResponse(200, "Stats for Scores", typeof(StatsScores))]
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<ActionResult<StatsScores>> RetrieveScoreStats(
             [FromRoute]int firstBoxScore,
@@ -75,7 +76,7 @@ namespace Futbol.API.Controllers.V1
         /// <param name="seasonId">The season identifier.</param>
         /// <returns>Stats based around the provided team</returns>
         [HttpGet("Teams/{teamId}")]
-        [ProducesResponseType(200)]
+        [SwaggerResponse(200, "Stats for Teams", typeof(StatsTeam))]
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<ActionResult<StatsTeam>> RetrieveTeamStats([FromRoute]int teamId, [FromQuery]int? competitionId = null, [FromQuery]int? seasonId = null)
         {
@@ -93,7 +94,7 @@ namespace Futbol.API.Controllers.V1
         /// <param name="seasonId">The season identifier.</param>
         /// <returns>Stats based around the provided fixture between two teams</returns>
         [HttpGet("Fixtures/{homeTeam}/{awayTeam}")]
-        [ProducesResponseType(200)]
+        [SwaggerResponse(200, "Stats for Fixtures", typeof(StatsFixtures))]
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<ActionResult<StatsFixtures>> RetrieveFixtureStats([FromRoute]int homeTeam, [FromRoute]int awayTeam, [FromQuery]int? competitionId = null, [FromQuery]int? seasonId = null)
         {
@@ -109,7 +110,7 @@ namespace Futbol.API.Controllers.V1
         /// <param name="seasonId">The season identifier.</param>
         /// <returns>Stats based around the competition and season as a whole</returns>
         [HttpGet("Competitions/{competitionId}/Seasons/{seasonId}")]
-        [ProducesResponseType(200)]
+        [SwaggerResponse(200, "Stats for Competition Seasons", typeof(StatsCompetitionSeason))]
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<ActionResult<StatsCompetitionSeason>> RetrieveCompetitionSeasonStats([FromRoute]int competitionId, [FromRoute]int seasonId)
         {
@@ -125,7 +126,7 @@ namespace Futbol.API.Controllers.V1
         /// <param name="seasonId">The season identifier.</param>
         /// <returns>The table of stats for the competition and season</returns>
         [HttpGet("Competitions/{competitionId}/Seasons/{seasonId}/Table")]
-        [ProducesResponseType(200)]
+        [SwaggerResponse(200, "Table of Stats", typeof(StatsLeagueTable))]
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<ActionResult<StatsLeagueTable>> RetrieveCompetitionSeasonTableStats([FromRoute]int competitionId, [FromRoute]int seasonId)
         {

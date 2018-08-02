@@ -19,9 +19,9 @@ namespace Futbol.API.Services
             this.urlService = urlService;
         }
 
-        public IEnumerable<FootballMatch> GetMatches(FootballFilter filter)
+        public IEnumerable<FootballMatch> GetMatches(FootballFilter filter, int pageNumber, int pageSize)
         {
-            var matchData = this.futbolRepository.RetrieveMatches(filter);
+            var matchData = this.futbolRepository.RetrieveMatches(filter, pageNumber, pageSize);
             var mappedMatches = this.MapMatches(matchData);
 
             return mappedMatches;

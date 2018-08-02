@@ -53,6 +53,7 @@ namespace Futbol.Common.Models.DataModels
         [JsonProperty("_halfTimeScoreStats", NullValueHandling = NullValueHandling.Ignore)]
         public Uri HalfTimeScoreStats { get; set; }
 
+        [JsonIgnore]
         [JsonProperty("_allMatches", NullValueHandling = NullValueHandling.Ignore)]
         public Uri AllMatches { get; set; }
     }

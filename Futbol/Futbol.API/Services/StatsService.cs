@@ -180,7 +180,7 @@ namespace Futbol.API.Services
 
         public StatsCompetitionSeason RetrieveCompetitionSeason(int competitionId, int seasonId)
         {
-            var matches = this.futbolRepository.RetrieveMatches(new FootballFilter { CompetitionId = competitionId, SeasonId = seasonId });
+            var matches = this.futbolRepository.RetrieveMatches(new FootballFilter { CompetitionId = competitionId, SeasonId = seasonId }, 1, 1000);
 
             if (matches == null || !matches.Any())
             {
@@ -242,7 +242,7 @@ namespace Futbol.API.Services
 
         public StatsLeagueTable RetrieveStatsLeagueTable(int competitionId, int seasonId)
         {
-            var matches = this.futbolRepository.RetrieveMatches(new FootballFilter { CompetitionId = competitionId, SeasonId = seasonId });
+            var matches = this.futbolRepository.RetrieveMatches(new FootballFilter { CompetitionId = competitionId, SeasonId = seasonId }, 1, 1000);
 
             if (matches == null || !matches.Any())
             {

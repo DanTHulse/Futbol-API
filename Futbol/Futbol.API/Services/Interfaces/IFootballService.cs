@@ -5,7 +5,7 @@ namespace Futbol.API.Services.Interfaces
 {
     public interface IFootballService : IService
     {
-        IEnumerable<FootballMatch> GetMatches(FootballFilter filter);
+        IEnumerable<FootballMatch> GetMatches(FootballFilter filter, int pageNumber, int pageSize);
 
         IEnumerable<FootballMatch> GetMatchById(int matchId);
 

@@ -2,6 +2,8 @@
 using Futbol.Common.Models.Football;
 using Futbol.Common.Models.Stats;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 
 namespace Futbol.Common.Infrastructure
 {
@@ -17,9 +19,18 @@ namespace Futbol.Common.Infrastructure
 
         public virtual DbSet<Team> Team { get; set; }
 
+        public static readonly LoggerFactory MyLoggerFactory
+            = new LoggerFactory(new[] { new ConsoleLoggerProvider((_, __) => true, true) });
+
         public FutbolContext(DbContextOptions<FutbolContext> options) : base(options)
         {
         }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+            => optionsBuilder
+                .UseLoggerFactory(MyLoggerFactory) // Warning: Do not create a new ILoggerFactory instance each time
+                .UseSqlServer(
+                    @"data source=tcp:joi.database.windows.net,1433;initial catalog=FUTBOL;User ID=daniel.hulse;Password=CloughtAz1");
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -52,7 +63,8 @@ namespace Futbol.Common.Infrastructure
                     .HasConstraintName("FK_Team_AwayTeamId");
                 entity.HasOne(e => e.MatchData)
                     .WithOne(e => e.Match)
-                    .HasForeignKey<MatchData>();
+                    .HasForeignKey<MatchData>(f => f.MatchId)
+                    .IsRequired(true);
             });
 
             modelBuilder.Entity<MatchData>(entity =>

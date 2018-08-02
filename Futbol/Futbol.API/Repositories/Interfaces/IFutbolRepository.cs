@@ -7,7 +7,7 @@ namespace Futbol.API.Repositories.Interfaces
 {
     public interface IFutbolRepository : IRepository
     {
-        IEnumerable<Match> RetrieveMatches(FootballFilter filter);
+        IEnumerable<Match> RetrieveMatches(FootballFilter filter, int pageNumber, int pageSize);
 
         IEnumerable<Match> RetrieveMatchesByScore(int firstBoxScore, int secondBoxScore, int? competitionId, int? seasonId, bool fullTime);
 

@@ -5,6 +5,7 @@ using Futbol.API.Helpers;
 using Futbol.API.Services.Interfaces;
 using Futbol.Common.Models.DataModels;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Futbol.API.Controllers.V1
 {
@@ -30,18 +31,20 @@ namespace Futbol.API.Controllers.V1
         /// Search for football match data.
         /// </summary>
         /// <param name="filter">The match filters</param>
+        /// <param name="pageNumber">The current page number</param>
+        /// <param name="pageSize">The size of the page to be returned</param>
         /// <returns>A list of matches based on the provided filters</returns>
         [HttpGet("Matches/")]
-        [ProducesResponseType(200)]
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<ActionResult<IEnumerable<FootballMatch>>> SearchScores([FromQuery]FootballFilter filter = null)
+        [SwaggerResponse(200, "List of Football Matches", typeof(IEnumerable<FootballMatch>))]
+        //[ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<ActionResult<IEnumerable<FootballMatch>>> SearchScores([FromQuery]FootballFilter filter = null, int pageNumber = 1, int pageSize = 100)
         {
             if (filter != null && filter.MatchId.HasValue)
             {
                 return this.Ok(await Task.Run(() => this.footballService.GetMatchById(filter.MatchId.Value)));
             }
 
-            var matches = await Task.Run(() => this.footballService.GetMatches(filter));
+            var matches = await Task.Run(() => this.footballService.GetMatches(filter, pageNumber, pageSize));
 
             return this.Ok(matches);
         }
@@ -52,7 +55,7 @@ namespace Futbol.API.Controllers.V1
         /// <param name="competitionName">[Optional] Search string for competition names, accepts [*] and [?] wildcards</param>
         /// <returns>All competitions</returns>
         [HttpGet("Competitions/")]
-        [ProducesResponseType(200)]
+        [SwaggerResponse(200, "List of Competitions", typeof(IEnumerable<FootballCompetition>))]
         public async Task<ActionResult<IEnumerable<FootballCompetition>>> GetCompetitions([FromQuery]string competitionName = null)
         {
             var competitions = await Task.Run(() => this.footballService.GetCompetitions());
@@ -73,8 +76,8 @@ namespace Futbol.API.Controllers.V1
         /// <param name="competitionId">The competition identifier.</param>
         /// <returns>The specific competition</returns>
         [HttpGet("Competitions/{competitionId:int}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(204)]
+        [SwaggerResponse(200, "Competition", typeof(FootballCompetition))]
+        [SwaggerResponse(204)]
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<ActionResult<FootballCompetition>> GetCompetitionById([FromRoute]int competitionId)
         {
@@ -94,7 +97,7 @@ namespace Futbol.API.Controllers.V1
         /// <param name="seasonYear">[Optional] The year the season takes place in</param>
         /// <returns>All seasons</returns>
         [HttpGet("Seasons/")]
-        [ProducesResponseType(200)]
+        [SwaggerResponse(200, "List of Seasons", typeof(IEnumerable<FootballSeason>))]
         public async Task<ActionResult<IEnumerable<FootballSeason>>> GetSeasons([FromQuery]int? seasonYear = null)
         {
             var seasons = await Task.Run(() => this.footballService.GetSeasons());
@@ -112,8 +115,8 @@ namespace Futbol.API.Controllers.V1
         /// <param name="seasonId">The season identifier.</param>
         /// <returns>The specific season</returns>
         [HttpGet("Seasons/{seasonId:int}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(204)]
+        [SwaggerResponse(200, "Season", typeof(FootballSeason))]
+        [SwaggerResponse(204)]
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<ActionResult<FootballSeason>> GetSeasonById([FromRoute]int seasonId)
         {
@@ -133,7 +136,7 @@ namespace Futbol.API.Controllers.V1
         /// <param name="teamName">[Optional] Search string for team names, accepts [*] and [?] wildcards</param>
         /// <returns>All teams</returns>
         [HttpGet("Teams/")]
-        [ProducesResponseType(200)]
+        [SwaggerResponse(200, "List of Teams", typeof(IEnumerable<FootballTeam>))]
         public async Task<ActionResult<IEnumerable<FootballTeam>>> GetTeams([FromQuery]string teamName = null)
         {
             var teams = await Task.Run(() => this.footballService.GetTeams());
@@ -154,8 +157,8 @@ namespace Futbol.API.Controllers.V1
         /// <param name="teamId">The team identifier.</param>
         /// <returns>The specific team</returns>
         [HttpGet("Teams/{teamId:int}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(204)]
+        [SwaggerResponse(200, "Team", typeof(FootballTeam))]
+        [SwaggerResponse(204)]
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<ActionResult<FootballTeam>> GetTeamById([FromRoute]int teamId)
         {
